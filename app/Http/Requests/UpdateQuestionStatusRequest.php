@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Community\Question;
+namespace TechStudio\Lms\app\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Community\Forum;
+namespace TechStudio\Lms\app\Http\Requests;
 
 use App\Helper\SlugGenerator;
 use App\Models\Category;

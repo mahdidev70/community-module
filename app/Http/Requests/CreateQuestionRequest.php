@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Community\Question;
+namespace TechStudio\Lms\app\Http\Requests;
 
 use App\Helper\SlugGenerator;
 use Illuminate\Foundation\Http\FormRequest;

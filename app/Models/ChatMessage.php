@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace TechStudio\Community\app\Models;
 
 use App\Models\Traits\Attachable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

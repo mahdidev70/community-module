@@ -2,12 +2,12 @@
 
 namespace TechStudio\Community\app\Models;
 
-use App\Models\Traits\Attachable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
+use TechStudio\Core\app\Models\Traits\Attachable;
 
 class ChatMessage extends Model
 {

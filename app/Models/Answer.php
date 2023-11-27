@@ -2,11 +2,11 @@
 
 namespace TechStudio\Community\app\Models;
 
-use App\Models\Traits\Attachable;
-use App\Models\Traits\Likeable;
 use \Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use TechStudio\Core\app\Models\Traits\Attachable;
+use TechStudio\Core\app\Models\Traits\Likeable;
 
 class Answer extends Model
 {

@@ -4,6 +4,7 @@ namespace TechStudio\Community\app\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use TechStudio\Community\app\Models\Question;
 
 class SearchController extends Controller
 {

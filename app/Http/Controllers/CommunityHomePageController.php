@@ -3,10 +3,10 @@
 namespace TechStudio\Community\app\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Category;
-use App\Models\ChatRoom;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use TechStudio\Community\app\Models\ChatRoom;
+use TechStudio\Core\app\Models\Category;
 
 class CommunityHomePageController extends Controller
 {

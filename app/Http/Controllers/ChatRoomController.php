@@ -2,34 +2,33 @@
 
 namespace TechStudio\Community\app\Http\Controllers;
 
-use App\Events\AddChatroomMember;
-use App\Events\CoverChatRoom;
-use App\Events\DeleteChatMessage;
-use App\Events\EditDescriptionChatroom;
-use App\Events\NewChatMessage;
-use App\Events\RecentChatsSidebar;
-use App\Events\RemoveChatroomMember;
-use App\Events\UnreadCountMember;
 use App\Helper\SlugGenerator;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Community\Forum\AddRemoveMemberRequest;
-use App\Http\Requests\Community\Forum\CreateRoomRequest;
-use App\Http\Requests\Community\Forum\EditDescriptionRequest;
-use App\Http\Requests\Community\Forum\NewMessageRequest;
-use App\Http\Requests\Community\Forum\UpdateRoomRequest;
-use App\Http\Requests\Community\Forum\UpdateRoomStatusRequest;
-use App\Http\Requests\Community\RoomCoverRequest;
-use App\Models\Category;
-use App\Models\ChatMessage;
-use App\Models\ChatRoom;
-use App\Models\UserProfile;
-use App\Services\Category\CategoryService;
-use App\Services\Chat\ChatService;
-use App\Services\File\FileService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
+use TechStudio\Community\app\Events\AddChatroomMember;
+use TechStudio\Community\app\Events\CoverChatRoom;
+use TechStudio\Community\app\Events\DeleteChatMessage;
+use TechStudio\Community\app\Events\EditDescriptionChatroom;
+use TechStudio\Community\app\Events\NewChatMessage;
+use TechStudio\Community\app\Events\RecentChatsSidebar;
+use TechStudio\Community\app\Events\RemoveChatroomMember;
+use TechStudio\Community\app\Events\UnreadCountMember;
+use TechStudio\Community\app\Models\ChatMessage;
+use TechStudio\Community\app\Models\ChatRoom;
+use TechStudio\Community\app\Services\Chat\ChatService;
+use TechStudio\Core\app\Models\Category;
+use TechStudio\Core\app\Models\UserProfile;
+use TechStudio\Core\app\Services\Category\CategoryService;
+use TechStudio\Core\app\Services\File\FileService;
+use TechStudio\Lms\app\Http\Requests\AddRemoveMemberRequest;
+use TechStudio\Lms\app\Http\Requests\CreateRoomRequest;
+use TechStudio\Lms\app\Http\Requests\EditDescriptionRequest;
+use TechStudio\Lms\app\Http\Requests\RoomCoverRequest;
+use TechStudio\Lms\app\Http\Requests\UpdateRoomRequest;
+use TechStudio\Lms\app\Http\Requests\UpdateRoomStatusRequest;
 
 class ChatRoomController extends Controller
 {
@@ -227,7 +226,7 @@ class ChatRoomController extends Controller
     }
 
     public function recentChatsSidebar(Request $request) {
-        $userId = \Auth::user()->id;
+        $userId = Auth::user()->id;
         $message = $this->chatService->getSidebar();
 
         RecentChatsSidebar::dispatch($userId, $message['rooms']);
@@ -411,7 +410,7 @@ class ChatRoomController extends Controller
     }
     public function join(Request $request)
     {
-        return $rooms = ChatRoom::where('slug',$request->chat_slug)->with('previewMembers')->withCount('members')->first();
+        return ChatRoom::where('slug',$request->chat_slug)->with('previewMembers')->withCount('members')->first();
     }
     public function addMember(ChatRoom $chat_slug, AddRemoveMemberRequest $request)
     {

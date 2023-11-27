@@ -4,19 +4,16 @@ namespace TechStudio\Community\app\Http\Controllers;
 
 use App\Helper\SlugGenerator;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Community\Question\CreateQuestionRequest;
-use App\Http\Requests\Community\Question\ReactRequest;
-use App\Http\Requests\Community\Question\UpdateQuestionStatusRequest;
-use App\Http\Resources\Community\QuestionsResource;
-use App\Models\Answer;
-use App\Models\Category;
-use App\Models\Question;
-use App\Repositories\Community\Interfaces\QuestionRepositoryInterface;
-use App\Services\File\FileService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
+use TechStudio\Community\app\Http\Resources\QuestionsResource;
+use TechStudio\Community\app\Models\Question;
+use TechStudio\Core\app\Models\Category;
+use TechStudio\Lms\app\Http\Requests\CreateQuestionRequest;
+use TechStudio\Lms\app\Http\Requests\ReactRequest;
+use TechStudio\Lms\app\Http\Requests\UpdateQuestionStatusRequest;
 
 class QuestionController extends Controller
 {

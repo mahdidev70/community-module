@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Community\Question;
+namespace TechStudio\Community\app\Http\Controllers;
 
 use App\Helper\SlugGenerator;
 use App\Http\Controllers\Controller;

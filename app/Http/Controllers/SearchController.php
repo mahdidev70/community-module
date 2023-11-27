@@ -1,12 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Community\Question;
+namespace TechStudio\Community\app\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Article;
-use App\Models\Question;
-use App\Models\UserProfile;
-use App\Models\WpArticle;
 use Illuminate\Http\Request;
 
 class SearchController extends Controller

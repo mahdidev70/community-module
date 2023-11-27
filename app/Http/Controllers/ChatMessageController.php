@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Community\Forum;
+namespace TechStudio\Community\app\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 

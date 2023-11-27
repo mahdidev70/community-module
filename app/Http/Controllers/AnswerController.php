@@ -1,19 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Community\Answer;
+namespace TechStudio\Community\app\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Community\Question\AnswerRequest;
-use App\Http\Requests\Community\Question\ReactRequest;
-use App\Http\Requests\Community\Question\UpdateAnswerStatusRequest;
-use App\Http\Resources\Community\AnswersResource;
-use App\Models\Answer;
-use App\Models\Question;
-use App\Repositories\Community\Interfaces\AnswerRepositoryInterface;
-use App\Services\File\FileService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class AnswerController extends Controller
 {

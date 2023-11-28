@@ -1,17 +1,17 @@
 <?php
 
-namespace TechStudio\Community\app\Services\Chat;
+namespace TechStudio\Community\app\Services;
 
-use App\Events\RecentChatsSidebar;
-use App\Models\ChatRoom;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use TechStudio\Community\app\Events\RecentChatsSidebar;
+use TechStudio\Community\app\Models\ChatRoom;
 
 class ChatService
 {
-    public function getSidebar() {
-
-        $rooms = \Auth::user()->chatrooms()->latest()->with('category', 'messages')->withCount('messages')->get()
+    public function getSidebar() 
+    {
+        $rooms = Auth::user()->chatRooms()->latest()->with('category', 'messages')->withCount('messages')->get()
         ->map(fn($room) => [
             'id' => $room->id,
             'slug' => $room->slug,
@@ -51,7 +51,7 @@ class ChatService
     public function recentChatsSidebar($room,$loginUser) {
         $users = $room->members()->where('user_id', '!=', $loginUser)->get();
             $memberIds = $users->pluck('id');
-            $rooms = Chatroom::with('category', 'messages','members')
+            $rooms = ChatRoom::with('category', 'messages','members')
                ->whereHas('members', function ($query) use ($memberIds) {
                     $query->whereIn('user_id', $memberIds);
                 })

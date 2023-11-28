@@ -1,5 +1,7 @@
 <?php
 
+namespace TechStudio\Community\database\Migrations;
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->text('text');
             $table->foreignId('question_id')->constrained();
-            $table->foreignId('user_id')->constrained('user_profiles');
+            $table->foreignId('user_id')->constrained('core_user_profiles');
             $table->enum('status', ['approved','hidden','waiting_for_approval'])->default('waiting_for_approval');
             $table->timestamps();
         });

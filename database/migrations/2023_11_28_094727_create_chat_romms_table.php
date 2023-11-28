@@ -1,5 +1,7 @@
 <?php
 
+namespace TechStudio\Community\database\Migrations;
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,8 +17,8 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('slug');
-            $table->foreignId('category_id')->nullable()->constrained('categories')->noActionOnDelete();
-            $table->integer('course_id')->after('category_id')->nullable();
+            $table->foreignId('category_id')->nullable()->constrained('core_categories')->noActionOnDelete();
+            $table->integer('course_id')->nullable();
             $table->enum('status',['active', 'inactive', 'draft'])->default('draft');
             $table->text('description')->nullable();
             $table->string('avatar_url')->nullable();

@@ -16,19 +16,19 @@ use TechStudio\Community\app\Events\NewChatMessage;
 use TechStudio\Community\app\Events\RecentChatsSidebar;
 use TechStudio\Community\app\Events\RemoveChatroomMember;
 use TechStudio\Community\app\Events\UnreadCountMember;
+use TechStudio\Community\app\Http\Requests\AddRemoveMemberRequest;
+use TechStudio\Community\app\Http\Requests\CreateRoomRequest;
+use TechStudio\Community\app\Http\Requests\EditDescriptionRequest;
+use TechStudio\Community\app\Http\Requests\RoomCoverRequest;
+use TechStudio\Community\app\Http\Requests\UpdateRoomRequest;
+use TechStudio\Community\app\Http\Requests\UpdateRoomStatusRequest;
 use TechStudio\Community\app\Models\ChatMessage;
 use TechStudio\Community\app\Models\ChatRoom;
-use TechStudio\Community\app\Services\Chat\ChatService;
+use TechStudio\Community\app\Services\ChatService;
 use TechStudio\Core\app\Models\Category;
 use TechStudio\Core\app\Models\UserProfile;
 use TechStudio\Core\app\Services\Category\CategoryService;
 use TechStudio\Core\app\Services\File\FileService;
-use TechStudio\Lms\app\Http\Requests\AddRemoveMemberRequest;
-use TechStudio\Lms\app\Http\Requests\CreateRoomRequest;
-use TechStudio\Lms\app\Http\Requests\EditDescriptionRequest;
-use TechStudio\Lms\app\Http\Requests\RoomCoverRequest;
-use TechStudio\Lms\app\Http\Requests\UpdateRoomRequest;
-use TechStudio\Lms\app\Http\Requests\UpdateRoomStatusRequest;
 
 class ChatRoomController extends Controller
 {

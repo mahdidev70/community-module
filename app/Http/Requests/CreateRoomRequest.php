@@ -1,12 +1,12 @@
 <?php
 
-namespace TechStudio\Lms\app\Http\Requests;
+namespace TechStudio\Community\app\Http\Requests;
 
 use App\Helper\SlugGenerator;
-use App\Models\Category;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use TechStudio\Core\app\Models\Category ;
 
 class CreateRoomRequest extends FormRequest
 {

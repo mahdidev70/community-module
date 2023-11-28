@@ -1,6 +1,7 @@
 <?php
 
-namespace TechStudio\Lms\app\Http\Requests;
+namespace TechStudio\Community\app\Http\Requests;
+use App\Http\Controllers\Controller;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;

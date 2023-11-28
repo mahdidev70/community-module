@@ -5,14 +5,14 @@ namespace TechStudio\Community\app\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use TechStudio\Community\app\Http\Requests\AnswerRequest;
+use TechStudio\Community\app\Http\Requests\ReactRequest;
+use TechStudio\Community\app\Http\Requests\UpdateAnswerStatusRequest;
 use TechStudio\Community\app\Http\Resources\AnswersResource;
 use TechStudio\Community\app\Models\Answer;
 use TechStudio\Community\app\Models\Question;
 use TechStudio\Community\app\Repositories\Interfaces\AnswerRepositoryInterface;
 use TechStudio\Core\app\Services\File\FileService;
-use TechStudio\Lms\app\Http\Requests\AnswerRequest;
-use TechStudio\Lms\app\Http\Requests\ReactRequest;
-use TechStudio\Lms\app\Http\Requests\UpdateAnswerStatusRequest;
 
 class AnswerController extends Controller
 {

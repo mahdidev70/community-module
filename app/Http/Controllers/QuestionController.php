@@ -8,12 +8,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
+use TechStudio\Community\app\Http\Requests\CreateQuestionRequest;
+use TechStudio\Community\app\Http\Requests\ReactRequest;
+use TechStudio\Community\app\Http\Requests\UpdateQuestionStatusRequest;
 use TechStudio\Community\app\Http\Resources\QuestionsResource;
 use TechStudio\Community\app\Models\Question;
+use TechStudio\Community\app\Repositories\Interfaces\QuestionRepositoryInterface;
 use TechStudio\Core\app\Models\Category;
-use TechStudio\Lms\app\Http\Requests\CreateQuestionRequest;
-use TechStudio\Lms\app\Http\Requests\ReactRequest;
-use TechStudio\Lms\app\Http\Requests\UpdateQuestionStatusRequest;
+use TechStudio\Core\app\Services\File\FileService;
 
 class QuestionController extends Controller
 {

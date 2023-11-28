@@ -3,11 +3,12 @@
 namespace TechStudio\Community\app\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use TechStudio\Community\app\Events\UpdateChatMessage;
+use TechStudio\Community\app\Http\Requests\ReactMessageRequest;
 use TechStudio\Community\app\Models\ChatMessage;
 use TechStudio\Community\app\Models\ChatMessageReact;
-use TechStudio\Lms\app\Http\Requests\ReactMessageRequest;
 
 class ChatMessageReactController extends Controller
 {

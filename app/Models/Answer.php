@@ -12,6 +12,8 @@ class Answer extends Model
 {
     use HasFactory, Likeable, Attachable;
 
+    protected $table = 'community_answers';
+    
     protected $fillable = ['question_id', 'user_id', 'text','likes_count','dislikes_count','status'];
 
     public function user() {

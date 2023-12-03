@@ -6,11 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use \Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+use TechStudio\Core\app\Models\Category;
+use TechStudio\Core\app\Models\UserProfile;
 
 class ChatRoom extends Model
 {
     use HasFactory,SoftDeletes;
+
+    protected $table = 'community_chat_romms';
 
     protected $fillable=['category_id','course_id','title','is_private','status','avatar_url','banner_url','description','slug'];
     public function getRouteKeyName()
@@ -30,15 +33,15 @@ class ChatRoom extends Model
     }
 
     public function members() {
-        return $this->belongsToMany(UserProfile::class, 'chat_room_memberships', 'chat_room_id', 'user_id')->where('status','active');
+        return $this->belongsToMany(UserProfile::class, 'community_chat_room_memberships', 'chat_room_id', 'user_id')->where('status','active');
     }
 
     public function previewMembers() {
-        return $this->belongsToMany(UserProfile::class, 'chat_room_memberships', 'chat_room_id', 'user_id')->where('status','active');
+        return $this->belongsToMany(UserProfile::class, 'community_chat_room_memberships', 'chat_room_id', 'user_id')->where('status','active');
     }
 
     public function unreadCountMessage() {
-        return $this->belongsToMany(UserProfile::class, 'chat_room_memberships', 'chat_room_id', 'user_id')->select('unread_count')->pluck('unread_count')->first();
+        return $this->belongsToMany(UserProfile::class, 'community_chat_room_memberships', 'chat_room_id', 'user_id')->select('unread_count')->pluck('unread_count')->first();
     }
 
    /* protected static function boot()

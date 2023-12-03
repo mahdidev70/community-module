@@ -13,6 +13,10 @@ class Question extends Model
 {
     use HasFactory, Attachable, Likeable;
 
+    protected $table = 'community_questions';
+
+    protected $guarded = ['id'];
+
     public function getRouteKeyName()
     {
         return 'slug';

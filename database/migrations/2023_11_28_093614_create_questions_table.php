@@ -17,11 +17,11 @@ return new class extends Migration
             $table->id();
             $table->text('text');
             $table->string('slug')->unique();
-            $table->foreignId('asker_user_id')->nullable()->constrained('core_user_profiles')->nullOnDelete();
-            $table->foreignId('category_id')->nullable()->constrained('core_categories')->noActionOnDelete();
+            $table->foreignId('asker_user_id')->nullable()->nullOnDelete();
+            $table->foreignId('category_id')->nullable()->noActionOnDelete();
             $table->enum('status', ['approved','hidden','waiting_for_approval'])->default('waiting_for_approval');
-            $table->integer('viewsCount');
-            $table->string('publication_date');
+            $table->integer('viewsCount')->nullable();
+            $table->string('publication_date')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

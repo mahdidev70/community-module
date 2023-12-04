@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('slug');
-            $table->foreignId('category_id')->nullable()->constrained('core_categories')->noActionOnDelete();
+            $table->foreignId('category_id')->nullable()->noActionOnDelete();
             $table->integer('course_id')->nullable();
             $table->enum('status',['active', 'inactive', 'draft'])->default('draft');
             $table->text('description')->nullable();

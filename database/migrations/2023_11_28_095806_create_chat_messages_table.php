@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('community_chat_messages', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('room_id')->constrained('community_chat_romms');
-            $table->foreignId('user_id')->constrained('core_user_profiles');
+            $table->foreignId('room_id');
+            $table->foreignId('user_id');
             $table->boolean('is_seen')->default(false);
             $table->text('message')->nullable();
             $table->foreignId('reply_to')->nullable(); 

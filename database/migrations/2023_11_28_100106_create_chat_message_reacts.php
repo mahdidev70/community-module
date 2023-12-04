@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('chat_message_reacts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('core_user_profiles');
-            $table->foreignId('chat_id')->constrained('community_chat_messages');
+            $table->foreignId('user_id');
+            $table->foreignId('chat_id');
             $table->enum('reaction',['like','dislike','clap','ok','happy','sad','smile']);
             $table->timestamps();
         });

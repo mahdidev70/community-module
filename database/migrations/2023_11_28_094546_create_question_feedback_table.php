@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('community_question_feedback', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->nullable()->constrained('core_user_profiles')->nullOnDelete();
-            $table->foreignId('question_id')->nullable()->constrained('community_questions')->cascadeOnDelete();
+            $table->foreignId('user_id')->nullable()->nullOnDelete();
+            $table->foreignId('question_id')->nullable()->cascadeOnDelete();
             $table->enum('action', ['like', 'dislike']);
             $table->timestamps();
         });

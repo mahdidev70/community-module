@@ -13,11 +13,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('community_chat_room_memberships', function (Blueprint $table) {
+        Schema::create('community_answers', function (Blueprint $table) {
             $table->id();
+            $table->text('text');
+            $table->foreignId('question_id');
             $table->foreignId('user_id');
-            $table->foreignId('chat_room_id');
-            $table->integer('unread_count')->default(0);
+            $table->enum('status', ['approved','hidden','waiting_for_approval'])->default('waiting_for_approval');
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('community_chat_room_memberships');
+        Schema::dropIfExists('community_answers');
     }
 };

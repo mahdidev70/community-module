@@ -35,7 +35,8 @@ class ChatRoomController extends Controller
     public function __construct(protected FileService $fileService, protected ChatService $chatService,protected CategoryService $categoryService)
     {
     }
-    public function getSingleChatPageCommonData($category_slug, $chat_slug) {
+
+    public function getSingleChatPageCommonData($local, $category_slug, $chat_slug) {
         $category_id = Category::where('slug', $category_slug)->where('status','active')->firstOrFail()->id;
         $room = ChatRoom::where('category_id', $category_id)
             ->where('status','active')
@@ -64,7 +65,9 @@ class ChatRoomController extends Controller
             'description' => $room->description
         ];
     }
-    public function getSingleChatPageMessages($category_slug, $chat_slug) {
+
+    public function getSingleChatPageMessages($local, $category_slug, $chat_slug) 
+    {
         $user = Auth::user();
         $category_id = Category::where('slug', $category_slug)->where('status','active')->firstOrFail()->id;
         $room = ChatRoom::where('category_id', $category_id)->where('slug', $chat_slug)->where('status','active')->firstOrFail();
@@ -285,6 +288,7 @@ class ChatRoomController extends Controller
             'last_page' => $rooms->lastPage(),
         ]);
     }
+    
 
     public function getChatRoomsCommon()
     {
@@ -317,7 +321,6 @@ class ChatRoomController extends Controller
             'top_rooms' => $topViewRoom,
             'categories' => $categories,
         ]);
-
     }
 
     public function getSearchChatRooms(Request $request)
@@ -408,15 +411,18 @@ class ChatRoomController extends Controller
             "status" => $chat_slug->status,
             ]);
     }
+
     public function join(Request $request)
     {
-        return ChatRoom::where('slug',$request->chat_slug)->with('previewMembers')->withCount('members')->first();
+        return ChatRoom::where('slug',$request->chat_slug)->with('previewMembers')->withCount('members')->firstOrFail();
     }
-    public function addMember(ChatRoom $chat_slug, AddRemoveMemberRequest $request)
+
+    public function addMember($local, ChatRoom $chat_slug, AddRemoveMemberRequest $request)
     {
+        return $chat_slug;
         $member = $request->memberId;
         $chat_slug->members()->sync($member->id);
-       $memberCount =  $chat_slug->members()->count();
+        $memberCount =  $chat_slug->members()->count();
         AddChatroomMember::dispatch($chat_slug->id,[
             'id' => $member->id,
             "displayName" => $member->getDisplayName(),
@@ -443,7 +449,8 @@ class ChatRoomController extends Controller
             ],
         ]);
     }
-    public function removeRoomMember(Category $category_slug, ChatRoom $chat_slug,AddRemoveMemberRequest $request)
+
+    public function removeRoomMember($local, Category $category_slug, ChatRoom $chat_slug,AddRemoveMemberRequest $request)
     {
         $member = UserProfile::find($request->memberId);
         $chat_slug->members()->detach($member->id);
@@ -469,11 +476,10 @@ class ChatRoomController extends Controller
             ],
         ]);
     }
-
-    public function editRoomDescription(Category $category_slug, ChatRoom $chat_slug,EditDescriptionRequest $request)
+ 
+    public function editRoomDescription($local, Category $category_slug, ChatRoom $room,EditDescriptionRequest $request)
     {
-         $chat_slug->update(['description' => $request->description]);
-        $room = $chat_slug;
+        $room->update(['description' => $request->description]);
 
         $data =[
             'roomId' => $room->id,
@@ -499,6 +505,7 @@ class ChatRoomController extends Controller
         EditDescriptionChatroom::dispatch($room->id,$data);
         return response()->json($data);
     }
+    
     public function getChatRoomsPannelCommon()
     {
         $categories =  $this->categoryService->getCategoriesForFilter(new ChatRoom());

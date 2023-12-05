@@ -18,11 +18,13 @@ class ChatMessage extends Model
 
     protected $guarded = ['id'];
 
-    public function user() {
+    public function user() 
+    {
         return $this->belongsTo(UserProfile::class, 'user_id');  # FIXME CRITICAL n+1???
     }
 
-    public function reply_to_object() {
+    public function reply_to_object() 
+    {
         return $this->belongsTo(ChatMessage::class, 'reply_to')->with('user');  # FIXME CRITICAL n+1???
     }
 

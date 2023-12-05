@@ -10,11 +10,12 @@ use TechStudio\Core\app\Models\Category;
 use TechStudio\Core\app\Models\UserProfile;
 use TechStudio\Lms\app\Models\Course;
 
+
 class ChatRoom extends Model
 {
     use HasFactory,SoftDeletes;
 
-    protected $table = 'community_chat_romms';
+    protected $table = 'community_chat_rooms';
 
     protected $guarded = ['id'];
 

@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use TechStudio\Community\app\Events\RecentChatsSidebar;
 use TechStudio\Community\app\Models\ChatRoom;
-
+use TechStudio\Core\app\Models\UserProfile;
 class ChatService
 {
     public function getSidebar() 
@@ -35,14 +35,14 @@ class ChatService
 
     public function incrementUnreadCount($loginUser,$chatRoomId)
     {
-        DB::table('chat_room_memberships')
+        DB::table('community_chat_room_memberships')
             ->where('chat_room_id', $chatRoomId)
             ->where('user_id', '!=', $loginUser)
             ->increment('unread_count');
     }
     public function decrementUnreadCount($loginUser,$chatRoomId)
     {
-        DB::table('chat_room_memberships')
+        DB::table('community_chat_room_memberships')
             ->where('chat_room_id', $chatRoomId)
             ->where('user_id', $loginUser)
             ->update(['unread_count' => 0]);

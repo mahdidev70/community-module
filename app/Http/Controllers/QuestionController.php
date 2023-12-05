@@ -185,7 +185,7 @@ class QuestionController extends Controller
         return $questions;
     }
 
-    public function storeFeedbackToQuestion($question_slug, ReactRequest $request) {
+    public function storeFeedbackToQuestion($local, $question_slug, ReactRequest $request) {
         $question_query = Question::where('slug', $question_slug)->where('status', 'approved')->firstOrFail();
         $currentUserAction = $request->action;
             // likeBy() or dislikeBy() or clearBy
@@ -226,7 +226,7 @@ class QuestionController extends Controller
                 $question, 201);
     }
 
-    public function singleQuestionData($question_slug, Request $request)
+    public function singleQuestionData($local, $question_slug, Request $request)
     {
         $question = Question::where('slug', $question_slug)->where('status', 'approved')->with(['asker', 'category'])->firstOrFail();
         $question->increment('viewsCount');

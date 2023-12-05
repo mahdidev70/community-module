@@ -2,10 +2,10 @@
 
 namespace TechStudio\Community\app\Http\Requests;
 
-use App\Helper\SlugGenerator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use TechStudio\Core\app\Helper\SlugGenerator;
 use TechStudio\Core\app\Models\Category ;
 
 class CreateRoomRequest extends FormRequest
@@ -26,12 +26,12 @@ class CreateRoomRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['required','string','unique:chat_rooms,title'],
-            'slug' => ['required','unique:chat_rooms,slug'],
-            'category_slug' => ['required', 'string', 'exists:categories,slug'],
+            'title' => ['required','string','unique:community_chat_romms,title'],
+            'slug' => ['required','unique:community_chat_romms,slug'],
+            'category_slug' => ['required', 'string', 'exists:core_categories,slug'],
             'file' => ['nullable','max:2048','mimes:jpeg,png,jpg,gif'],
             'status' => ['required',Rule::in(['active','inactive','draft'])],
-            'members.*' => ['nullable','exists:user_profiles,id',]
+            'members.*' => ['nullable','exists:core_user_profiles,id',]
         ];
     }
 

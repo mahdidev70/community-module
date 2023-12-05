@@ -2,8 +2,8 @@
 
 namespace TechStudio\Community\app\Http\Requests;
 
-use App\Helper\SlugGenerator;
 use Illuminate\Foundation\Http\FormRequest;
+use TechStudio\Core\app\Helper\SlugGenerator;
 
 class CreateQuestionRequest extends FormRequest
 {
@@ -27,7 +27,7 @@ class CreateQuestionRequest extends FormRequest
             'attachments' => ['nullable','array', 'max:3'],
             'attachments.*' => ['integer','exists:files,id'],
             'categorySlug' => ['required','string'],
-            'slug' => ['required','unique:questions,slug'],
+            'slug' => ['required','unique:community_questions,slug'],
         ];
     }
 

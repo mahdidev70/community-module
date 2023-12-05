@@ -23,7 +23,7 @@ class UpdateAnswerStatusRequest extends FormRequest
     {
         return [
             'status' => ['required','in:approved,hidden,waiting_for_approval'],
-            'ids' => ['required','array','exists:answers,id'],
+            'ids' => ['required','array','exists:community_answers,id'],
         ];
     }
 }

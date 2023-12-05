@@ -27,7 +27,7 @@ class AnswerController extends Controller
         $this->answerRepository = $answerRepository;
     }
 
-    public function newAnswer(Question $slug,AnswerRequest $request)
+    public function newAnswer($local, Question $slug,AnswerRequest $request)
     {
         if ($slug->status != 'approved'){
             return response()->json([
@@ -64,7 +64,7 @@ class AnswerController extends Controller
         return response($data, 201);
     }
 
-    public function storeFeedbackToAnswer($question_slug,$answer_id,ReactRequest $request)
+    public function storeFeedbackToAnswer($local, $question_slug,$answer_id,ReactRequest $request)
     {
         $answer = Answer::where('id', $answer_id)->firstOrFail();
         if ($answer->question() && $answer->question->slug != $question_slug){

@@ -110,7 +110,8 @@ class ChatRoomController extends Controller
         ];
     }
 
-    private function getOtherRooms($chatRoomSlug) {
+    private function getOtherRooms($chatRoomSlug) 
+    {
         $otherRooms = ChatRoom::where('slug','<>',$chatRoomSlug)->with('previewMembers','category')->withCount('members')->take(5)->get();
         return $otherRooms->map(fn ($room) => [
             'roomId' => $room->id,
@@ -132,7 +133,8 @@ class ChatRoomController extends Controller
         ]);
     }
 
-    public function postChatMessage(Category $category_slug,ChatRoom $room, Request $request) {
+    public function postChatMessage($local, Category $category_slug,ChatRoom $room, Request $request) 
+    {
         $swearProbability = null;
         try {
             $response = Http::timeout(1)->get("http://swear_detection:5001/" . $request->message)->json();
@@ -186,7 +188,8 @@ class ChatRoomController extends Controller
         return response(['id' => $message->id], 201);
     }
 
-    public function getChatRoomMembers($category_slug, $chat_slug) {
+    public function getChatRoomMembers($local, $category_slug, $chat_slug) 
+    {
         $category_id = Category::where('slug', $category_slug)->where('status','active')->firstOrFail()->id;
         $room = ChatRoom::where('category_id', $category_id)->where('slug', $chat_slug)->where('status','active')->firstOrFail();
         $response = $room->members()->paginate(10)->through( fn ($member) => [
@@ -210,13 +213,15 @@ class ChatRoomController extends Controller
         return response()->json($createdFiles);
     }
 
-    public function deleteMessage(int $message_id)
+    public function deleteMessage($local, $message_id)
     {
-        $message = ChatMessage::where('id',$message_id)->first();
+        $message = ChatMessage::where('id', $message_id)->firstOrFail();
+        return $message;
 
         if (!$message) {
             return response()->json(['message' => 'Message not found'], 404);
         }
+
         $message->attachments()->delete();
         $message->delete();
 
@@ -224,8 +229,10 @@ class ChatRoomController extends Controller
             'id' => $message->id,
             'message' => $message->message,
         ]);
-        return response()->json(['message' => 'Message deleted successfully',
-            'message_id' => $message_id]);
+
+        return response()->json([
+            'message' => 'Message deleted successfully', 'message_id' => $message_id
+        ]);
     }
 
     public function recentChatsSidebar(Request $request) {
@@ -502,7 +509,7 @@ class ChatRoomController extends Controller
             'otherRooms' => $this->getOtherRooms($room->slug),
             'description' => $room->description
         ];
-        EditDescriptionChatroom::dispatch($room->id,$data);
+        EditDescriptionChatroom::dispatch($room->id, $data);
         return response()->json($data);
     }
     
@@ -611,7 +618,7 @@ class ChatRoomController extends Controller
             $room
         );
     }
-    public function deleteRoom(ChatRoom $slug)
+    public function deleteRoom($local, ChatRoom $slug)
     {
         $slug->members()->detach();
         $slug->delete();
@@ -619,7 +626,7 @@ class ChatRoomController extends Controller
         return response(
             "OK", 200);
     }
-    public function getChatData(ChatRoom $room)
+    public function getChatData($local, ChatRoom $room)
     {
         $data = [
             'roomId' => $room->id,
@@ -643,7 +650,7 @@ class ChatRoomController extends Controller
         ];
         return response()->json($data);
     }
-    public function updateChat(UpdateRoomRequest $request,ChatRoom $room)
+    public function updateChat($local, UpdateRoomRequest $request,ChatRoom $room)
     {
         $data = $request->only(ChatRoom::getModel()->fillable);
         if ($request->file('file')){

@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('community_chat_romms', function (Blueprint $table) {
+        Schema::create('community_chat_rooms', function (Blueprint $table) {
             $table->id();
             $table->string('title');
             $table->string('slug');
@@ -34,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('community_chat_romms');
+        Schema::dropIfExists('community_chat_rooms');
     }
 };

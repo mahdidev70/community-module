@@ -8,12 +8,16 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use TechStudio\Core\app\Models\Traits\Attachable;
+use TechStudio\Core\app\Models\UserProfile;
 
 class ChatMessage extends Model
 {
     use HasFactory , Attachable, SoftDeletes;
 
-    protected $table = 'chat_messages';
+    protected $table = 'community_chat_messages';
+
+    protected $guarded = ['id'];
+
     public function user() {
         return $this->belongsTo(UserProfile::class, 'user_id');  # FIXME CRITICAL n+1???
     }
@@ -34,7 +38,8 @@ class ChatMessage extends Model
             ->get();
     }
 
-    public function current_user_feedback() {
+    public function current_user_feedback() 
+    {
         $user_id = Auth::user()->id;
         return $this->reactions()->where('chat_id',$this->id)->where('user_id', $user_id)->pluck('reaction')->first();
     }

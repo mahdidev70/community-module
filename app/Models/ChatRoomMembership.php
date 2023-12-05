@@ -11,4 +11,5 @@ class ChatRoomMembership extends Model
 
     protected $table = 'community_chat_room_memberships';
 
+    protected $guarded = ['id'];
 }

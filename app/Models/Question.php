@@ -6,8 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use \Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use TechStudio\Core\app\Models\Category;
+use TechStudio\Core\app\Models\Like;
 use TechStudio\Core\app\Models\Traits\Attachable;
 use TechStudio\Core\app\Models\Traits\Likeable;
+use TechStudio\Core\app\Models\UserProfile;
 
 class Question extends Model
 {

@@ -8,6 +8,7 @@ use \Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use TechStudio\Core\app\Models\Category;
 use TechStudio\Core\app\Models\UserProfile;
+use TechStudio\Lms\app\Models\Course;
 
 class ChatRoom extends Model
 {
@@ -15,7 +16,8 @@ class ChatRoom extends Model
 
     protected $table = 'community_chat_romms';
 
-    protected $fillable=['category_id','course_id','title','is_private','status','avatar_url','banner_url','description','slug'];
+    protected $guarded = ['id'];
+
     public function getRouteKeyName()
     {
         return 'slug';

@@ -2,6 +2,7 @@
 
 namespace TechStudio\Community\app\Repositories;
 
+use TechStudio\Community\app\Models\Answer;
 use TechStudio\Community\app\Repositories\Interfaces\AnswerRepositoryInterface;
 
 class AnswerRepository implements AnswerRepositoryInterface

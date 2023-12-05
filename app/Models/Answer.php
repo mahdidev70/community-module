@@ -5,8 +5,10 @@ namespace TechStudio\Community\app\Models;
 use \Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use TechStudio\Core\app\Models\Like;
 use TechStudio\Core\app\Models\Traits\Attachable;
 use TechStudio\Core\app\Models\Traits\Likeable;
+use TechStudio\Core\app\Models\UserProfile;
 
 class Answer extends Model
 {
@@ -14,7 +16,7 @@ class Answer extends Model
 
     protected $table = 'community_answers';
     
-    protected $fillable = ['question_id', 'user_id', 'text','likes_count','dislikes_count','status'];
+    protected $guarded = ['id'];
 
     public function user() {
         return $this->belongsTo(UserProfile::class, 'user_id');

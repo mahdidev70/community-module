@@ -23,7 +23,7 @@ class ReactMessageRequest extends FormRequest
     public function rules(): array
     {
         return [
-           "chatMessageId" => ['required','integer','exists:chat_messages,id'],
+           "chatMessageId" => ['required','integer','exists:community_chat_messages,id'],
             "reaction" => ['required',Rule::in(['like','dislike','happy','smile','sad','ok','clap','clear']),]
         ];
     }

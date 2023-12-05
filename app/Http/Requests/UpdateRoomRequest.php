@@ -23,8 +23,8 @@ class UpdateRoomRequest extends CreateRoomRequest
     public function rules(): array
     {
         return array_merge(parent::rules(), [
-            'slug' => ['required', Rule::unique('chat_rooms')->ignore($this->room), 'alpha_dash'],
-            'title' => ['required', Rule::unique('chat_rooms')->ignore($this->room)],
+            'slug' => ['required', Rule::unique('community_chat_rooms')->ignore($this->room), 'alpha_dash'],
+            'title' => ['required', Rule::unique('community_chat_rooms')->ignore($this->room)],
         ]);
     }
 }

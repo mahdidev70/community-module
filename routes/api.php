@@ -36,7 +36,7 @@ Route::prefix('community')->group(function() {
         Route::middleware("auth:sanctum")->group(function () {
 
             // Route::post('add/{chat_slug}', [ChatRoomController::class,'addMember']); // Done
-            // Route::get('{category_slug}/{chat_slug}/data', [ChatRoomController::class,'getSingleChatPageMessages']); 
+            // Route::get('{category_slug}/{chat_slug}/data', [ChatRoomController::class,'getSingleChatPageMessages']);
             // Route::put('{category_slug}/{chat_slug}/editDescription', [ChatRoomController::class,'editRoomDescription']);
             // Route::post('{category_slug}/{chat_slug}/removeMember', [ChatRoomController::class,'removeRoomMember']);
             // Route::post('{category_slug}/{room}/message', [ChatRoomController::class,'postChatMessage']);
@@ -99,7 +99,7 @@ Route::middleware("auth:sanctum")->group(function () {
             // Route::get('show/{room}', [ChatRoomController::class, 'getChatData'])->can('show_room'); // Done
             // Route::post('update/{room}', [ChatRoomController::class, 'updateChat'])->can('edit_room'); // Done
             // Route::delete('{slug}', [ChatRoomController::class, 'deleteRoom'])->can('delete_room'); // Done
-            
+
         });
     });
 });

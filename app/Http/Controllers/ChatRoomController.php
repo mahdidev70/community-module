@@ -66,7 +66,7 @@ class ChatRoomController extends Controller
         ];
     }
 
-    public function getSingleChatPageMessages($local, $category_slug, $chat_slug) 
+    public function getSingleChatPageMessages($local, $category_slug, $chat_slug)
     {
         $user = Auth::user();
         $category_id = Category::where('slug', $category_slug)->where('status','active')->firstOrFail()->id;
@@ -110,7 +110,7 @@ class ChatRoomController extends Controller
         ];
     }
 
-    private function getOtherRooms($chatRoomSlug) 
+    private function getOtherRooms($chatRoomSlug)
     {
         $otherRooms = ChatRoom::where('slug','<>',$chatRoomSlug)->with('previewMembers','category')->withCount('members')->take(5)->get();
         return $otherRooms->map(fn ($room) => [
@@ -133,7 +133,7 @@ class ChatRoomController extends Controller
         ]);
     }
 
-    public function postChatMessage($local, Category $category_slug,ChatRoom $room, Request $request) 
+    public function postChatMessage($local, Category $category_slug,ChatRoom $room, Request $request)
     {
         $swearProbability = null;
         try {
@@ -188,7 +188,7 @@ class ChatRoomController extends Controller
         return response(['id' => $message->id], 201);
     }
 
-    public function getChatRoomMembers($local, $category_slug, $chat_slug) 
+    public function getChatRoomMembers($local, $category_slug, $chat_slug)
     {
         $category_id = Category::where('slug', $category_slug)->where('status','active')->firstOrFail()->id;
         $room = ChatRoom::where('category_id', $category_id)->where('slug', $chat_slug)->where('status','active')->firstOrFail();
@@ -295,7 +295,7 @@ class ChatRoomController extends Controller
             'last_page' => $rooms->lastPage(),
         ]);
     }
-    
+
 
     public function getChatRoomsCommon()
     {
@@ -483,7 +483,7 @@ class ChatRoomController extends Controller
             ],
         ]);
     }
- 
+
     public function editRoomDescription($local, Category $category_slug, ChatRoom $room,EditDescriptionRequest $request)
     {
         $room->update(['description' => $request->description]);
@@ -512,7 +512,7 @@ class ChatRoomController extends Controller
         EditDescriptionChatroom::dispatch($room->id, $data);
         return response()->json($data);
     }
-    
+
     public function getChatRoomsPannelCommon()
     {
         $categories =  $this->categoryService->getCategoriesForFilter(new ChatRoom());

@@ -22,8 +22,10 @@ use TechStudio\Community\app\Http\Requests\EditDescriptionRequest;
 use TechStudio\Community\app\Http\Requests\RoomCoverRequest;
 use TechStudio\Community\app\Http\Requests\UpdateRoomRequest;
 use TechStudio\Community\app\Http\Requests\UpdateRoomStatusRequest;
+use TechStudio\Community\app\Http\Resources\ChatRoomResource;
 use TechStudio\Community\app\Models\ChatMessage;
 use TechStudio\Community\app\Models\ChatRoom;
+use TechStudio\Community\app\Models\ChatRoomMembership;
 use TechStudio\Community\app\Services\ChatService;
 use TechStudio\Core\app\Models\Category;
 use TechStudio\Core\app\Models\UserProfile;
@@ -33,8 +35,7 @@ use TechStudio\Core\app\Services\File\FileService;
 class ChatRoomController extends Controller
 {
     public function __construct(protected FileService $fileService, protected ChatService $chatService,protected CategoryService $categoryService)
-    {
-    }
+    {}
 
     public function getSingleChatPageCommonData($local, $category_slug, $chat_slug) {
         $category_id = Category::where('slug', $category_slug)->where('status','active')->firstOrFail()->id;
@@ -536,6 +537,7 @@ class ChatRoomController extends Controller
         ]);
 
     }
+
     public function getChatRoomsPannelData(Request $request)
     {
         $query = ChatRoom::with(['previewMembers', 'category'])->withCount('members');
@@ -577,6 +579,7 @@ class ChatRoomController extends Controller
             'data' => $data
         ];
     }
+
     public function updateRoomStatus(UpdateRoomStatusRequest $request)
     {
         ChatRoom::whereIn('id', $request['ids'])
@@ -585,6 +588,7 @@ class ChatRoomController extends Controller
             'updatedRooms' => $request['ids'],
         ];
     }
+
     public function getCreatChatRoomsPannelCommon()
     {
         $categories =  $this->categoryService->getCategoriesForFilter(new ChatRoom());
@@ -599,6 +603,7 @@ class ChatRoomController extends Controller
             'users' => $users,
         ]);
     }
+
     public function createChatRoomsPannel(CreateRoomRequest $request)
     {
         $data = $request->only(ChatRoom::getModel()->fillable);
@@ -618,6 +623,7 @@ class ChatRoomController extends Controller
             $room
         );
     }
+
     public function deleteRoom($local, ChatRoom $slug)
     {
         $slug->members()->detach();
@@ -626,6 +632,7 @@ class ChatRoomController extends Controller
         return response(
             "OK", 200);
     }
+
     public function getChatData($local, ChatRoom $room)
     {
         $data = [
@@ -650,6 +657,7 @@ class ChatRoomController extends Controller
         ];
         return response()->json($data);
     }
+
     public function updateChat($local, UpdateRoomRequest $request,ChatRoom $room)
     {
         $data = $request->only(ChatRoom::getModel()->fillable);
@@ -668,5 +676,18 @@ class ChatRoomController extends Controller
         return response()->json(
             $room
         );
+    }
+
+    public function getUserRoom() 
+    {
+        $user = Auth::user();
+
+        $chatRoomIds = ChatRoomMembership::where('user_id', $user->id)->pluck('chat_room_id');
+
+        $myRoom = ChatRoom::whereIn('id', $chatRoomIds)->get();
+
+        return [
+            'myRoom' => ChatRoomResource::collection($myRoom),
+        ];
     }
 }

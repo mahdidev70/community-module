@@ -11,7 +11,10 @@ use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use TechStudio\Community\app\Http\Requests\CreateQuestionRequest;
 use TechStudio\Community\app\Http\Requests\ReactRequest;
 use TechStudio\Community\app\Http\Requests\UpdateQuestionStatusRequest;
+use TechStudio\Community\app\Http\Resources\AnswerResource;
+use TechStudio\Community\app\Http\Resources\QuestionResource;
 use TechStudio\Community\app\Http\Resources\QuestionsResource;
+use TechStudio\Community\app\Models\Answer;
 use TechStudio\Community\app\Models\Question;
 use TechStudio\Community\app\Repositories\Interfaces\QuestionRepositoryInterface;
 use TechStudio\Core\app\Models\Category;
@@ -331,4 +334,16 @@ class QuestionController extends Controller
         ];
     }
 
+    public function getUserQuestion() 
+    {
+        $user = Auth::user();
+
+        $myQuestions = Question::where('asker_user_id', $user->id)->get();
+        $myAnswer = Answer::where('user_id', $user->id)->get();
+
+        return [
+            'myQuestions' => QuestionResource::collection($myQuestions),
+            'myAnswer' => AnswerResource::collection($myAnswer),
+        ];
+    }
 }

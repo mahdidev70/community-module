@@ -1,0 +1,16 @@
+{
+    "name": "tech-studio/community-module",
+    "description": "about package",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "TechStudio\\Community\\": "/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Mahdi Samian"
+        }
+    ],
+    "require": {}
+}

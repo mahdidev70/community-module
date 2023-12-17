@@ -12,5 +12,15 @@
             "name": "Mahdi Samian"
         }
     ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "TechStudio\\Community\\app\\Providers\\CommunityRepositoryServiceProvider",
+                "TechStudio\\Community\\app\\Providers\\CommunityRouteServiceProvider",
+                "TechStudio\\Community\\app\\Providers\\CommunityServiceProvider",
+                "TechStudio\\Community\\app\\Providers\\EventServiceProvider"
+            ]
+        }
+    },
     "require": {}
 }

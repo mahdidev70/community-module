@@ -26,7 +26,7 @@ class AnswerResource extends JsonResource
                 'displayName' => $this->user->getDisplayName(), 
                 'avatarUrl' => $this->user->avatar_url, 
             ],
-            'title' => $this->text,
+            'text' => $this->text,
             'status' => $this->status,
             'creationDate' => $this->created_at,
             'likesCount' => $this->likes_count ?? 0,

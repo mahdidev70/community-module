@@ -20,8 +20,9 @@ class QuestionResource extends JsonResource
             'slug' => $this->slug,
             'creationDate' =>$this->created_at,
             'category' => [
-                'title' => $this->category->title,
-                'slug' => $this->category->slug,
+                'id' => $this->category->id ?? '', 
+                'title' => $this->category->title ?? '',
+                'slug' => $this->category->slug ?? '',
             ],
             'author' => [
                 'id' => $this->asker->id,

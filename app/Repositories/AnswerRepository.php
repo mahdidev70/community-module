@@ -2,6 +2,7 @@
 
 namespace TechStudio\Community\app\Repositories;
 
+use Illuminate\Support\Facades\Auth;
 use TechStudio\Community\app\Models\Answer;
 use TechStudio\Community\app\Repositories\Interfaces\AnswerRepositoryInterface;
 
@@ -27,6 +28,8 @@ class AnswerRepository implements AnswerRepositoryInterface
             } elseif ($data->sort == 'likesCount') {
                 $query->withCount('likes')->orderByDesc('likes_count');
             }
+        }else {
+            $query = $query->orderBy('id', 'desc');
         }
 
         if (isset($data->questionSlug) && $data->questionSlug != null) {
@@ -34,21 +37,34 @@ class AnswerRepository implements AnswerRepositoryInterface
                 $questionQuery->where('slug', $data->input('questionSlug'));
             });
         }
-
         if (isset($data->creationDateMax) && $data->creationDateMax != null) {
             $query->whereDate('created_at', '>=', $data->input('creationDateMax'));
         }
-
         if (isset($data->creationDateMin) && $data->creationDateMin != null) {
             $query->whereDate('created_at', '<=', $data->input('creationDateMin'));
         }
-
         if (isset($data->status) && $data->status != null) {
             $query->where('status', $data->input('status'));
         }
 
         $answers = $query->paginate(10);
-
         return $answers;
+    }
+
+    public function createUpdate($data) 
+    {
+        $user = Auth::user();
+
+        $answer = Answer::updateOrCreate(
+            ['id' => $data['id']],
+            [
+                'question_id' => $data['questionId'],
+                'user_id' => $user->id,
+                'text' => $data['text'],
+                'attachments' => $data['attachments'],
+            ]
+        );
+
+        return $answer;
     }
 }

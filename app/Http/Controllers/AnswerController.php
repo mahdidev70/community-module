@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use TechStudio\Community\app\Http\Requests\AnswerRequest;
 use TechStudio\Community\app\Http\Requests\ReactRequest;
 use TechStudio\Community\app\Http\Requests\UpdateAnswerStatusRequest;
+use TechStudio\Community\app\Http\Resources\AnswerResource;
 use TechStudio\Community\app\Http\Resources\AnswersResource;
 use TechStudio\Community\app\Models\Answer;
 use TechStudio\Community\app\Models\Question;
@@ -140,32 +141,9 @@ class AnswerController extends Controller
         ];
     }
 
-    private function formatAnswer($answer)
+    public function createUpdateAnswer(Request $request)
     {
-        return [
-            'id' => $answer->id,
-            'user' => [
-                'displayName' => $answer->user->getDisplayName(),
-                'avatarUrl' => $answer->user->avatar_url,
-            ],
-            'creationDate' => $answer->created_at,
-            'feedback' => [
-                'likesCount' => $answer->likes_count ?? 0,
-                'dislikesCount' => $answer->dislikes_count ?? 0,
-                'currentUserAction' => $answer->current_user_feedback(),
-            ],
-            'text' => $answer->text,
-            'status' => $answer->status,
-            'answerId' => $answer->id,
-            'questionId' => $answer->question_id,
-            'attachments' => $answer->attachments->map(function ($file) {
-                return [
-                    'id' => $file->id,
-                    'type' => 'image',
-                    'previewImageUrl' => $file->file_url,
-                    'contentUrl' => $file->file_url,
-                ];
-            }),
-        ];
+        $answer = $this->answerRepository->createUpdate($request);
+        return new AnswerResource($answer);
     }
 }

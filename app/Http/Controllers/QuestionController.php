@@ -334,6 +334,12 @@ class QuestionController extends Controller
         ];
     }
 
+    public function createUpdateQuestion(Request $request)
+    {
+        $question = $this->questionRepository->createUpdate($request);
+        return new QuestionResource($question);
+    }
+
     public function getUserQuestion() 
     {
         $user = Auth::user();

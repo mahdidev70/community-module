@@ -2,6 +2,7 @@
 
 namespace TechStudio\Community\app\Repositories;
 
+use Illuminate\Support\Facades\Auth;
 use TechStudio\Community\app\Models\Question;
 use TechStudio\Community\app\Repositories\Interfaces\QuestionRepositoryInterface;
 
@@ -30,7 +31,8 @@ class QuestionRepository implements QuestionRepositoryInterface
             }elseif ($data->sort == 'publicationDate') {
                 $query->orderByDesc('publication_date');
             }
-
+        }else {
+            $query = $query->orderBy('id', 'desc');
         }
 
         if (isset($data->category) && $data->category != null) {
@@ -54,5 +56,23 @@ class QuestionRepository implements QuestionRepositoryInterface
         $questions = $query->paginate(10);
 
         return $questions;
+    }
+
+    public function createUpdate($data) 
+    {
+        $user = Auth::user();
+
+        $question = Question::updateOrCreate(
+            ['id' => $data['id']],
+            [
+                'text' => $data['text'],
+                'slug'=> $data['slug'],
+                'asker_user_id' => $user->id,
+                'category_id' => $data['categoryId'],
+                'attachments' => $data['attachments'],
+            ]
+        );
+    
+        return $question;
     }
 }

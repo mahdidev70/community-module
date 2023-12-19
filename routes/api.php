@@ -75,7 +75,6 @@ Route::prefix('community')->group(function() {
 Route::middleware("auth:sanctum")->group(function () {
 
     Route::prefix('panel')->group(function () {
-
         Route::prefix('question')->group(function () {
 
             Route::get('list', [QuestionController::class, 'getQuestionList']); // Done

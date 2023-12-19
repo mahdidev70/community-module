@@ -56,15 +56,15 @@ class Question extends Model
         return $this->morphMany(Like::class, 'likeable')->where('action', 'dislike');
     }
 
-
     public function likes()
     {
         return $this->morphMany(Like::class, 'likeable')->where('action', 'like');
     }
 
-    /*protected static function boot()
+    protected static function boot()
     {
         parent::boot();
+
         static::addGlobalScope('publiclyVisible', function (Builder $builder) {
             if (Auth::check()) {
                 $builder->where('asker_user_id', Auth::user()->id)->orWhere('status', 'approved');
@@ -72,5 +72,5 @@ class Question extends Model
                 $builder->where('status', 'approved');
             }
         });
-    }*/
+    }
 }

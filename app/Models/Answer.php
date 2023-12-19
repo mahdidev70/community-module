@@ -41,7 +41,7 @@ class Answer extends Model
     {
         parent::boot();
 
-        if (!request()->is(['api/community/*', 'api/panel/*'])) {
+        if (!request()->is(['*/api/community/*', '*/api/panel/*'])) {
             static::addGlobalScope('publiclyVisible', function (Builder $builder) {
                 $builder->where('status', 'approved');
             });

@@ -47,14 +47,14 @@ class ChatRoom extends Model
         return $this->belongsToMany(UserProfile::class, 'community_chat_room_memberships', 'chat_room_id', 'user_id')->select('unread_count')->pluck('unread_count')->first();
     }
 
-   /* protected static function boot()
+    protected static function boot()
     {
         parent::boot();
 
-        if (!request()->is(['api/community/*', 'api/panel/*'])) {
+        if (!request()->is(['*/api/community/*', '*/api/panel/*'])) {
             static::addGlobalScope('publiclyVisible', function (Builder $builder) {
                 $builder->where('status', 'active');
             });
         }
-    }*/
+    }
 }

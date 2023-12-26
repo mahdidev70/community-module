@@ -18,12 +18,12 @@ class ChatMessage extends Model
 
     protected $guarded = ['id'];
 
-    public function user() 
+    public function user()
     {
         return $this->belongsTo(UserProfile::class, 'user_id');  # FIXME CRITICAL n+1???
     }
 
-    public function reply_to_object() 
+    public function reply_to_object()
     {
         return $this->belongsTo(ChatMessage::class, 'reply_to')->with('user');  # FIXME CRITICAL n+1???
     }
@@ -40,10 +40,15 @@ class ChatMessage extends Model
             ->get();
     }
 
-    public function current_user_feedback() 
+    public function current_user_feedback()
     {
         $user_id = Auth::user()->id;
         return $this->reactions()->where('chat_id',$this->id)->where('user_id', $user_id)->pluck('reaction')->first();
+    }
+
+    public function room()
+    {
+        return $this->belongsTo(ChatRoom::class);
     }
 
 }

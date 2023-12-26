@@ -67,10 +67,21 @@ class AnswerController extends Controller
 
     public function storeFeedbackToAnswer($local, $question_slug,$answer_id,ReactRequest $request)
     {
-        $answer = Answer::where('id', $answer_id)->firstOrFail();
+        $answer = Answer::where('id', $answer_id)->first();
+        if (!$answer){
+            return response()->json([
+                'message' => 'مجاز به دادن لایک/دیسلایک به این پاسخ نیستید.',
+            ], 400);
+        }
+        if (Auth::user()->id == $answer->user_id){
+            return response()->json([
+                'message' => 'مجاز به دادن لایک/دیسلایک به این پاسخ نیستید.',
+            ], 400);
+        }
+
         if ($answer->question() && $answer->question->slug != $question_slug){
             return response()->json([
-                'message' => 'Cannot feedback to this message',
+                'message' => 'مجاز به دادن لایک/دیسلایک به این پاسخ نیستید.',
             ], 400);
         }
         $currentUserAction = $request->action;
@@ -113,7 +124,7 @@ class AnswerController extends Controller
         return new AnswersResource($answers);
     }
 
-    public function getAnswerListCommon() 
+    public function getAnswerListCommon()
     {
         $counts = [
             'all' => Answer::count(),

@@ -60,7 +60,7 @@ class QuestionController extends Controller
                     'contentUrl' => $file->file_url,
                 ];
             }),
-            
+
         ];
 
         $relevantQuestions = Question::where('category_id',$question->category_id)
@@ -189,7 +189,17 @@ class QuestionController extends Controller
     }
 
     public function storeFeedbackToQuestion($local, $question_slug, ReactRequest $request) {
-        $question_query = Question::where('slug', $question_slug)->where('status', 'approved')->firstOrFail();
+        $question_query = Question::where('slug', $question_slug)->where('status', 'approved')->first();
+        if (!$question_query){
+            return response()->json([
+                'message' => 'مجاز به دادن لایک/دیسلایک به این سوال نیستید.',
+            ], 400);
+        }
+        if (Auth::user()->id == $question_query->asker_user_id){
+            return response()->json([
+                'message' => 'مجاز به دادن لایک/دیسلایک به این سوال نیستید.',
+            ], 400);
+        }
         $currentUserAction = $request->action;
             // likeBy() or dislikeBy() or clearBy
          $functionName = strtolower($request->action).'By';
@@ -295,7 +305,7 @@ class QuestionController extends Controller
         return new QuestionsResource($questions);
     }
 
-    public function getQuestionListCommon() 
+    public function getQuestionListCommon()
     {
         $quesitonModel = new Question();
 
@@ -340,7 +350,7 @@ class QuestionController extends Controller
         return new QuestionResource($question);
     }
 
-    public function getUserQuestion() 
+    public function getUserQuestion()
     {
         $user = Auth::user();
 

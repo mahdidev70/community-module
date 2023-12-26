@@ -137,6 +137,11 @@ class ChatRoomController extends Controller
     public function postChatMessage($local, Category $category_slug,ChatRoom $room, Request $request)
     {
         $swearProbability = null;
+        if(!$this->userCanChangeRoomInfo($room)){
+            return response()->json([
+                'message' => 'برای تغییر در اتاق باید عضو اتاق باشید.',
+            ], 400);
+        }
         try {
             $response = Http::timeout(1)->get("http://swear_detection:5001/" . $request->message)->json();
             $swearProbability = $response['swear_probability'];
@@ -396,6 +401,11 @@ class ChatRoomController extends Controller
 
     public function uploadCover(ChatRoom $chat_slug, RoomCoverRequest $request)
     {
+        if(!$this->userCanChangeRoomInfo($chat_slug)){
+            return response()->json([
+                'message' => 'برای تغییر در اتاق باید عضو اتاق باشید.',
+            ], 400);
+        }
         $fileService = new FileService();
         $fileUrl = $fileService->uploadOneFile(
             $request,
@@ -460,6 +470,11 @@ class ChatRoomController extends Controller
 
     public function removeRoomMember($local, Category $category_slug, ChatRoom $chat_slug,AddRemoveMemberRequest $request)
     {
+        if(!$this->userCanChangeRoomInfo($chat_slug)){
+            return response()->json([
+                'message' => 'برای تغییر در اتاق باید عضو اتاق باشید.',
+            ], 400);
+        }
         $member = UserProfile::find($request->memberId);
         $chat_slug->members()->detach($member->id);
         $memberCount =  $chat_slug->members()->count();
@@ -487,6 +502,11 @@ class ChatRoomController extends Controller
 
     public function editRoomDescription($local, Category $category_slug, ChatRoom $room,EditDescriptionRequest $request)
     {
+        if(!$this->userCanChangeRoomInfo($room)){
+            return response()->json([
+                'message' => 'برای تغییر در اتاق باید عضو اتاق باشید.',
+            ], 400);
+        }
         $room->update(['description' => $request->description]);
 
         $data =[
@@ -678,7 +698,7 @@ class ChatRoomController extends Controller
         );
     }
 
-    public function getUserRoom() 
+    public function getUserRoom()
     {
         $user = Auth::user();
 
@@ -689,5 +709,19 @@ class ChatRoomController extends Controller
         return [
             'myRoom' => ChatRoomResource::collection($myRoom),
         ];
+    }
+    public function userCanChangeRoomInfo($room)
+    {
+        $user = Auth::user();
+        $checkUser = $room->members()->pluck('user_id')->toArray();
+        if (!$user){
+            return response()->json([
+                'message' => 'ابتدا وارد شوید.',
+            ], 401);
+        }
+        if(!in_array($user->id, $checkUser)) {
+            return false;
+        }
+        return true;
     }
 }

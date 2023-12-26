@@ -20,7 +20,21 @@ class ChatMessageReactController extends Controller
     public function saveChatReact(ReactMessageRequest $request)
     {
         $message = ChatMessage::where('id', $request->chatMessageId)->firstOrFail();
-        if ($message->user_id == Auth::user()->id) {
+
+        // Get the room associated with the chat message
+        $room = $message->room;
+        // Get the users in the room
+        $usersInRoom = $room->members;
+        // Check if a specific user is in the room
+        $userId = Auth::user()->id;
+        $isUserInRoom = $usersInRoom->contains('id', $userId);
+        if (!$isUserInRoom){
+            return response()->json([
+                'message' => 'مجاز به ارسال ری اکشن به این پیام نیستید.',
+            ], 400);
+        }
+
+        if ($message->user_id == $userId) {
             return response()->json([
                 'message' => 'Cannot react to your own message',
             ], 400);

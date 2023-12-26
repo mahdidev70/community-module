@@ -46,6 +46,7 @@ class AnswerController extends Controller
         $data = [
             "text" => $answer->text,
             "creationDate" => $answer->created_at,
+            "status" => $answer->status,
             "category" => [
                 "title" => $slug->category->title,
                 "slug" => $slug->category->slug
@@ -67,7 +68,7 @@ class AnswerController extends Controller
 
     public function storeFeedbackToAnswer($local, $question_slug,$answer_id,ReactRequest $request)
     {
-        $answer = Answer::where('id', $answer_id)->first();
+        $answer = Answer::where('id', $answer_id)->where('status', 'approved')->first();
         if (!$answer){
             return response()->json([
                 'message' => 'مجاز به دادن لایک/دیسلایک به این پاسخ نیستید.',

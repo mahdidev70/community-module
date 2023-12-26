@@ -222,7 +222,7 @@ class QuestionController extends Controller
         $question->asker_user_id = $user->id;
         $question->category_id = $category->id;
         $question->text = $request->text;
-       /* $question->status = 'waiting_for_approval';  // FIXME in production*/
+       $question->status = 'waiting_for_approval';
         $question->save();
         if ($request->attachments) {
             $question['attachments'] = $question->associateAttachments($request->attachments);

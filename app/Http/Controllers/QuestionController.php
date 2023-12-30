@@ -164,8 +164,8 @@ class QuestionController extends Controller
                 'status' => $q->status,
                 'creationDate' => $q->created_at,
                 'category' => [
-                    'slug' => $q->category->slug,
-                    'title' => $q->category->title,
+                    'slug' => $q->category?$q->category->slug:null,
+                    'title' => $q->category?$q->category->title:null,
                 ],
                 'asker' => [
                     'displayName' => $q->asker->getDisplayName(),
@@ -248,19 +248,30 @@ class QuestionController extends Controller
 
     public function singleQuestionData($local, $question_slug, Request $request)
     {
-        $question = Question::where('slug', $question_slug)->where('status', 'approved')->with(['asker', 'category'])->firstOrFail();
+        $question = Question::where('slug', $question_slug)->with(['asker', 'category'])->firstOrFail();
+        if ($question->status != 'approved'){
+            return response()->json(
+                ['message' => "باید ابتدا سوال شما تایید گردد."], 400
+            );
+        }
         $question->increment('viewsCount');
         $data = $this->formatQuestion($question);
         $relevantQuestions = Question::where('category_id', $question->category_id)
             ->where('status', 'approved')
-            ->latest()
+            ->latest('created_at')
             ->take(5)
             ->select('slug', 'text AS title')
             ->get();
 
-        $answers = $question->answers()
-            ->with('user')
-            ->latest()
+        $answers = $question->allAnswers()->where('status', 'approved');
+        if (Auth::user()){
+            $answers->orWhere(function ($query) {
+                $query->where('status', 'waiting_for_approval')
+                    ->where('user_id', Auth::user()->id );
+            });
+        }
+        $answers->with('user')
+            ->latest('created_at')
             ->get()
             ->map(function($answer) {
                 return $this->formatAnswer($answer);

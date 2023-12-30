@@ -32,7 +32,7 @@ class AnswerController extends Controller
     {
         if ($slug->status != 'approved'){
             return response()->json([
-                'message' => 'Cannot answer to this message',
+                'message' => 'مجاز به پاسخ به این سوال نیستید. ابتدا سوال باید توسط ادمین تایید شود.',
             ], 400);
         }
         $data = $request->only(Answer::getModel()->fillable);

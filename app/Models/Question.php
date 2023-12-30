@@ -35,8 +35,19 @@ class Question extends Model
         return $this->belongsTo(UserProfile::class, 'asker_user_id');
     }
 
-    public function answers()
+    public function answers($userCheck=false)
     {
+        if (!$userCheck){
+            if (Auth::user()){
+                return $this->hasMany(Answer::class)->where('status', 'approved')
+                    ->orWhere(function ($query) {
+                        $query->where('status', 'waiting_for_approval')
+                            ->where('user_id', Auth::user()->id );
+                    });
+            }else{
+                return $this->hasMany(Answer::class)->where('status', 'approved');
+            }
+        }
         return $this->hasMany(Answer::class)->where('status', 'approved');
     }
 
@@ -47,7 +58,7 @@ class Question extends Model
 
     public function topAnswers()
     {
-        return $this->answers()->latest()->with('user')->take(4);
+        return $this->answers(true)->latest()->with('user')->take(4);
     }
 
 

@@ -45,10 +45,10 @@ Route::prefix('community')->group(function() {
             Route::post('reaction', [ChatMessageReactController::class, 'saveChatReact']);
             Route::get('recentChatsSidebar', [ChatRoomController::class,'recentChatsSidebar']); //user and userProfile
             Route::get('question/{slug}', [QuestionController::class, 'singleQuestionData']); // Done
-            Route::get('homepage/common', [CommunityHomePageController::class, 'getHomepageCommonData']); //user and userProfile
-            Route::get('homepage/data', [QuestionController::class, 'getHomepageQuestionsData']); // Done
 
         });
+        Route::get('homepage/common', [CommunityHomePageController::class, 'getHomepageCommonData']); //user and userProfile
+        Route::get('homepage/data', [QuestionController::class, 'getHomepageQuestionsData']); // Done
 
     });
 

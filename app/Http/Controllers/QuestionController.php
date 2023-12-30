@@ -114,10 +114,17 @@ class QuestionController extends Controller
     }
 
     public function getHomepageQuestionsData(Request $request) {
-        $questions = Question::where('status', 'approved')->with(['asker', 'category', 'attachments', 'topAnswers'])
+        $questions = Question::where('status', 'approved');
+            if (Auth::user()){
+                $questions->orWhere(function ($query) {
+                    $query->where('status', 'waiting_for_approval')
+                        ->where('asker_user_id', Auth::user()->id );
+                });
+            }
+        $questions->with(['asker', 'category', 'attachments', 'topAnswers'])
             ->withCount('answers')->withCount('likes');
         if (!$request->has('sort')) {
-            $questions->orderBy('created_at', 'ASC');
+            $questions->orderBy('created_at', 'DESC');
         }else{
             if ($request->sort == 'recent') {
                 $questions->orderBy('created_at', 'DESC');

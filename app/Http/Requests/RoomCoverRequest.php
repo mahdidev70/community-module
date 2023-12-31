@@ -22,7 +22,7 @@ class RoomCoverRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'file' => 'required|max:2048|mimes:jpeg,png,jpg,gif',
+            'file' => 'required|file|max:2048|mimes:jpeg,png,jpg,gif',
         ];
     }
 }

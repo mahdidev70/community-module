@@ -22,7 +22,7 @@ class UpdateQuestionStatusRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status' => ['required','in:approved,hidden,waiting_for_approval'],
+            'status' => ['required','in:approved,hidden,waiting_for_approval,deleted'],
             'ids' => ['required','array','exists:community_questions,id'],
         ];
     }

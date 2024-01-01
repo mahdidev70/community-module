@@ -5,6 +5,7 @@ namespace TechStudio\Community\app\Repositories;
 use Illuminate\Support\Facades\Auth;
 use TechStudio\Community\app\Models\Question;
 use TechStudio\Community\app\Repositories\Interfaces\QuestionRepositoryInterface;
+use TechStudio\Core\app\Helper\SlugGenerator;
 
 class QuestionRepository implements QuestionRepositoryInterface
 {
@@ -58,7 +59,7 @@ class QuestionRepository implements QuestionRepositoryInterface
         return $questions;
     }
 
-    public function createUpdate($data) 
+    public function createUpdate($data)
     {
         $user = Auth::user();
 
@@ -66,13 +67,16 @@ class QuestionRepository implements QuestionRepositoryInterface
             ['id' => $data['id']],
             [
                 'text' => $data['text'],
-                'slug'=> $data['slug'],
+                'slug'=> $data['slug']??SlugGenerator::transform($data['qText']),
                 'asker_user_id' => $user->id,
                 'category_id' => $data['categoryId'],
-                'attachments' => $data['attachments'],
+                'status' => 'approved'
             ]
         );
-    
+        if ($data['attachments']) {
+                 $question['attachments'] = $question->associateAttachments($data['attachments']);
+            }
+
         return $question;
     }
 }

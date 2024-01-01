@@ -713,7 +713,7 @@ class ChatRoomController extends Controller
     public function userCanChangeRoomInfo($room)
     {
         $user = Auth::user();
-        $checkUser = $room->members()->pluck('user_id')->toArray();
+        $checkUser = $room->members()->pluck('rooms.user_id')->toArray();
         if (!$user){
             return response()->json([
                 'message' => 'ابتدا وارد شوید.',

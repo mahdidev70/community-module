@@ -2,10 +2,9 @@
 
 namespace TechStudio\Community\app\Listeners;
 
-use App\Events\CoverChatRoom;
-use App\Events\EditDescriptionChatroom;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
+use TechStudio\Community\app\Events\EditDescriptionChatroom;
 
 class SendDescriptionChatroomToClients
 {

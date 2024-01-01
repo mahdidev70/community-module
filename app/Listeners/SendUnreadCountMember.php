@@ -2,9 +2,9 @@
 
 namespace TechStudio\Community\app\Listeners;
 
-use App\Events\UnreadCountMember;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
+use TechStudio\Community\app\Events\UnreadCountMember;
 
 class SendUnreadCountMember
 {

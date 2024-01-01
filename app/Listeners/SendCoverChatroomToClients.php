@@ -2,10 +2,9 @@
 
 namespace TechStudio\Community\app\Listeners;
 
-use App\Events\CoverChatRoom;
-use App\Events\DeleteChatMessage;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
+use TechStudio\Community\app\Events\CoverChatRoom;
 
 class SendCoverChatroomToClients
 {

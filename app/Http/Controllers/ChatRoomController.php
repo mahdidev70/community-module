@@ -73,7 +73,7 @@ class ChatRoomController extends Controller
         $category_id = Category::where('slug', $category_slug)->where('status','active')->firstOrFail()->id;
         $room = ChatRoom::where('category_id', $category_id)->where('slug', $chat_slug)->where('status','active')->firstOrFail();
         $this->chatService->decrementUnreadCount($user->id,$room->id);
-        $allow = $room->members()->where('user_id', $user->id)->exists();
+        $allow = $room->members()->where('core_user_profiles.user_id', $user->id)->exists();
         $page = $room->messages()->latest()->with('user', 'reply_to_object', 'attachments')->paginate();
         UnreadCountMember::dispatch($room->id, $user->id);
         $page->through(function($a){

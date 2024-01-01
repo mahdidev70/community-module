@@ -32,7 +32,7 @@ Route::prefix('community')->group(function() {
         Route::get('join/{chat_slug?}', [ChatRoomController::class,'join']); // Done
         Route::post('room/{chat_slug}/upload_cover', [ChatRoomController::class,'uploadCover']);
         Route::get('{category_slug}/{chat_slug}/common', [ChatRoomController::class,'getSingleChatPageCommonData']); // Done
-
+        Route::get('{category_slug}/{chat_slug}/members', [ChatRoomController::class,'getChatRoomMembers']);
         Route::middleware("auth:sanctum")->group(function () {
 
             Route::post('add/{chat_slug}', [ChatRoomController::class,'addMember']); // Done

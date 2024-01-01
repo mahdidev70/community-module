@@ -399,7 +399,7 @@ class ChatRoomController extends Controller
         ]);
     }
 
-    public function uploadCover(ChatRoom $chat_slug, RoomCoverRequest $request)
+    public function uploadCover($local,ChatRoom $chat_slug, RoomCoverRequest $request)
     {
         if(!$this->userCanChangeRoomInfo($chat_slug)){
             return response()->json([

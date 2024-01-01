@@ -437,10 +437,15 @@ class ChatRoomController extends Controller
 
     public function addMember($local, ChatRoom $chat_slug, AddRemoveMemberRequest $request)
     {
-        return $chat_slug;
-        $member = $request->memberId;
-        $chat_slug->members()->sync($member->id);
+        $member = UserProfile::where('user_id',$request->memberId)->where('status','active')->first();
+        if (!$member){
+            return response()->json([
+                'message' => 'امکان عضویت در اتاق وجود ندارد.',
+            ], 404);
+        }
+        $chat_slug->members()->attach($member->id);
         $memberCount =  $chat_slug->members()->count();
+
         AddChatroomMember::dispatch($chat_slug->id,[
             'id' => $member->id,
             "displayName" => $member->getDisplayName(),

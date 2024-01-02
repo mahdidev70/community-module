@@ -66,10 +66,10 @@ class QuestionRepository implements QuestionRepositoryInterface
         $question = Question::updateOrCreate(
             ['id' => $data['id']],
             [
-                'text' => $data['text'],
+                'text' => $data['qText'],
                 'slug'=> $data['slug']??SlugGenerator::transform($data['qText']),
                 'asker_user_id' => $user->id,
-                'category_id' => $data['categoryId'],
+                'category_id' => $data['category'],
                 'status' => 'approved'
             ]
         );

@@ -79,6 +79,7 @@ Route::middleware("auth:sanctum")->group(function () {
             Route::get('list', [QuestionController::class, 'getQuestionList']); // Done
             Route::put('set_status', [QuestionController::class, 'updateQuestionStatus']); // Done
             Route::get('list/common', [QuestionController::class, 'getQuestionListCommon']); // Done
+            Route::put('question_edit', [QuestionController::class, 'createUpdateQuestion']);
 
         });
 

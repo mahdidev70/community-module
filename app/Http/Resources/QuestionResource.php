@@ -16,11 +16,11 @@ class QuestionResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'text' => $this->text,
+            'qText' => $this->text,
             'slug' => $this->slug,
             'creationDate' =>$this->created_at,
             'category' => [
-                'id' => $this->category->id ?? '', 
+                'id' => $this->category->id ?? '',
                 'title' => $this->category->title ?? '',
                 'slug' => $this->category->slug ?? '',
             ],

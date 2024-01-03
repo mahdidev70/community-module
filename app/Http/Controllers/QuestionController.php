@@ -12,6 +12,7 @@ use TechStudio\Community\app\Http\Requests\CreateQuestionRequest;
 use TechStudio\Community\app\Http\Requests\ReactRequest;
 use TechStudio\Community\app\Http\Requests\UpdateQuestionStatusRequest;
 use TechStudio\Community\app\Http\Resources\AnswerResource;
+use TechStudio\Community\app\Http\Resources\AnswersResource;
 use TechStudio\Community\app\Http\Resources\QuestionResource;
 use TechStudio\Community\app\Http\Resources\QuestionsResource;
 use TechStudio\Community\app\Models\Answer;
@@ -368,16 +369,21 @@ class QuestionController extends Controller
         return new QuestionResource($question);
     }
 
-    public function getUserQuestion()
+    public function getUserQuestion(Request $request)
     {
         $user = Auth::user();
 
-        $myQuestions = Question::where('asker_user_id', $user->id)->get();
-        $myAnswer = Answer::where('user_id', $user->id)->get();
+        if ($request['data'] == 'my') {
 
-        return [
-            'myQuestions' => QuestionResource::collection($myQuestions),
-            'myAnswer' => AnswerResource::collection($myAnswer),
-        ];
+            $myQuestions = Question::where('asker_user_id', $user->id)->paginate(10);
+            return new QuestionsResource($myQuestions);
+            
+        }elseif ($request['data'] == 'their') {
+
+            $myAnswer = Answer::where('user_id', $user->id)->paginate(10);
+            return new AnswersResource($myAnswer);
+
+        }
+
     }
 }

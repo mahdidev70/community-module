@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table(app(new Question())->getTable(), function (Blueprint $table) {
-            DB::statement("ALTER TABLE ".app(new Question())->getTable()." MODIFY COLUMN status ENUM('approved', 'hidden', 'waiting_for_approval','deleted') DEFAULT 'waiting_for_approval';");
+        Schema::table(app(Question::class)->getTable(), function (Blueprint $table) {
+            DB::statement("ALTER TABLE ".app(Question::class)->getTable()." MODIFY COLUMN status ENUM('approved', 'hidden', 'waiting_for_approval','deleted') DEFAULT 'waiting_for_approval';");
         });
     }
 
@@ -23,7 +23,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table(app(new Question())->getTable(), function (Blueprint $table) {
+        Schema::table(app(Question::class)->getTable(), function (Blueprint $table) {
             //
         });
     }

@@ -37,14 +37,17 @@ class ChatRoomController extends Controller
     public function __construct(protected FileService $fileService, protected ChatService $chatService,protected CategoryService $categoryService)
     {}
 
-    public function getSingleChatPageCommonData($local, $category_slug, $chat_slug) {
+    public function getSingleChatPageCommonData($locale, $category_slug, $chat_slug) 
+    {
         $category_id = Category::where('slug', $category_slug)->where('status','active')->firstOrFail()->id;
+
         $room = ChatRoom::where('category_id', $category_id)
             ->where('status','active')
             ->where('slug', $chat_slug)
             ->with(['previewMembers', 'category'])
             ->withCount('members')
             ->firstOrFail();
+
         return [
             'roomId' => $room->id,
             'name' => $room->title,
@@ -67,7 +70,7 @@ class ChatRoomController extends Controller
         ];
     }
 
-    public function getSingleChatPageMessages($local, $category_slug, $chat_slug)
+    public function getSingleChatPageMessages($locale, $category_slug, $chat_slug)
     {
         $user = Auth::user();
         $category_id = Category::where('slug', $category_slug)->where('status','active')->firstOrFail()->id;
@@ -78,42 +81,44 @@ class ChatRoomController extends Controller
         UnreadCountMember::dispatch($room->id, $user->id);
         $page->through(function($a){
 
-            return [
-                'id' => $a->id,
-                'userId' => $a->user_id,
-                'userDisplayName' => $a->user->getDisplayName(),
-                'stars' => null,
-                'avatarUrl' => $a->user->avatar_url,
-                'doubleChecks' => $a->is_seen,
-                'date' => $a->created_at,
-                'message' => $a->message,
-                'replyTo' => $a->reply_to_object ? [
-                    'id' => $a->reply_to_object->id,
-                    'userDisplayName' => $a->reply_to_object->user->getDisplayName(),
-                    'userId' => $a->reply_to_object->user->id,
-                    'message' => $a->reply_to_object->message,
-                ] : null,
-                'reactions' => [
-                    "totalReactions" => $a->reactionsCountByMsg(),
-                    "currentUserReaction" => $a->current_user_feedback()
-                    ],
-                'attachments' => $a->attachments->map(fn ($file) => [
-                    'id' => $file->id,
-                    'type' => 'image',  // TODO: infer
-                    'previewImageUrl' => $file->file_url,
-                    'contentUrl' => $file->file_url,
-                ])
-            ];
+        return [
+            'id' => $a->id,
+            'userId' => $a->user_id,
+            'userDisplayName' => $a->user->getDisplayName(),
+            'stars' => null,
+            'avatarUrl' => $a->user->avatar_url,
+            'doubleChecks' => $a->is_seen,
+            'date' => $a->created_at,
+            'message' => $a->message,
+            'replyTo' => $a->reply_to_object ? [
+                'id' => $a->reply_to_object->id,
+                'userDisplayName' => $a->reply_to_object->user->getDisplayName(),
+                'userId' => $a->reply_to_object->user->id,
+                'message' => $a->reply_to_object->message,
+            ] : null,
+            'reactions' => [
+                "totalReactions" => $a->reactionsCountByMsg(),
+                "currentUserReaction" => $a->current_user_feedback()
+                ],
+            'attachments' => $a->attachments->map(fn ($file) => [
+                'id' => $file->id,
+                'type' => 'image',  // TODO: infer
+                'previewImageUrl' => $file->file_url,
+                'contentUrl' => $file->file_url,
+            ])
+        ];
         });
+
         return [
             "loginUserAllowToChat" =>$allow,
             "data" => $page
         ];
     }
 
-    private function getOtherRooms($chatRoomSlug)
+    private function getOtherRooms($locale, $chatRoomSlug)
     {
         $otherRooms = ChatRoom::where('slug','<>',$chatRoomSlug)->with('previewMembers','category')->withCount('members')->take(5)->get();
+
         return $otherRooms->map(fn ($room) => [
             'roomId' => $room->id,
             'name' => $room->title,
@@ -134,7 +139,7 @@ class ChatRoomController extends Controller
         ]);
     }
 
-    public function postChatMessage($local, Category $category_slug,ChatRoom $room, Request $request)
+    public function postChatMessage($locale, Category $category_slug,ChatRoom $room, Request $request)
     {
         $swearProbability = null;
         if(!$this->userCanChangeRoomInfo($room)){
@@ -194,7 +199,7 @@ class ChatRoomController extends Controller
         return response(['id' => $message->id], 201);
     }
 
-    public function getChatRoomMembers($local, $category_slug, $chat_slug)
+    public function getChatRoomMembers($locale, $category_slug, $chat_slug)
     {
         $category_id = Category::where('slug', $category_slug)->where('status','active')->firstOrFail()->id;
         $room = ChatRoom::where('category_id', $category_id)->where('slug', $chat_slug)->where('status','active')->firstOrFail();
@@ -207,7 +212,8 @@ class ChatRoomController extends Controller
         return $response;
     }
 
-    public function newAttachment(Request $request) {
+    public function newAttachment($locale, Request $request) 
+    {
         $createdFiles = $this->fileService->upload(
             $request,
             max_count: 3,
@@ -219,7 +225,7 @@ class ChatRoomController extends Controller
         return response()->json($createdFiles);
     }
 
-    public function deleteMessage($local, $message_id)
+    public function deleteMessage($locale, $message_id)
     {
         $message = ChatMessage::where('id', $message_id)->firstOrFail();
         return $message;
@@ -241,7 +247,8 @@ class ChatRoomController extends Controller
         ]);
     }
 
-    public function recentChatsSidebar(Request $request) {
+    public function recentChatsSidebar() 
+    {
         $userId = Auth::user()->id;
         $message = $this->chatService->getSidebar();
 
@@ -249,7 +256,7 @@ class ChatRoomController extends Controller
         return $message;
     }
 
-    public function getChatRoomsData(Request $request)
+    public function getChatRoomsData($locale, Request $request)
     {
         $query = ChatRoom::where('status', 'active')->with(['previewMembers', 'category']);
 
@@ -336,7 +343,7 @@ class ChatRoomController extends Controller
         ]);
     }
 
-    public function getSearchChatRooms(Request $request)
+    public function getSearchChatRooms($locale, Request $request)
     {
         $query = ChatRoom::with(['previewMembers', 'category']);
         $topViewRoom = $query->orderBy('created_at', 'desc')
@@ -399,7 +406,7 @@ class ChatRoomController extends Controller
         ]);
     }
 
-    public function uploadCover($local,ChatRoom $chat_slug, RoomCoverRequest $request)
+    public function uploadCover($locale, ChatRoom $chat_slug, RoomCoverRequest $request)
     {
         if(!$this->userCanChangeRoomInfo($chat_slug)){
             return response()->json([
@@ -430,12 +437,12 @@ class ChatRoomController extends Controller
             ]);
     }
 
-    public function join(Request $request)
+    public function join($locale, Request $request)
     {
         return ChatRoom::where('slug',$request->chat_slug)->with('previewMembers')->withCount('members')->firstOrFail();
     }
 
-    public function addMember($local, ChatRoom $chat_slug, AddRemoveMemberRequest $request)
+    public function addMember($locale, ChatRoom $chat_slug, AddRemoveMemberRequest $request)
     {
         $member = UserProfile::where('user_id',$request->memberId)->where('status','active')->first();
         if (!$member){
@@ -473,7 +480,7 @@ class ChatRoomController extends Controller
         ]);
     }
 
-    public function removeRoomMember($local, Category $category_slug, ChatRoom $chat_slug,AddRemoveMemberRequest $request)
+    public function removeRoomMember($locale, Category $category_slug, ChatRoom $chat_slug,AddRemoveMemberRequest $request)
     {
         if(!$this->userCanChangeRoomInfo($chat_slug)){
             return response()->json([
@@ -505,7 +512,7 @@ class ChatRoomController extends Controller
         ]);
     }
 
-    public function editRoomDescription($local, Category $category_slug, ChatRoom $room,EditDescriptionRequest $request)
+    public function editRoomDescription($locale, Category $category_slug, ChatRoom $room,EditDescriptionRequest $request)
     {
         if(!$this->userCanChangeRoomInfo($room)){
             return response()->json([
@@ -563,7 +570,7 @@ class ChatRoomController extends Controller
 
     }
 
-    public function getChatRoomsPannelData(Request $request)
+    public function getChatRoomsPannelData($locale, Request $request)
     {
         $query = ChatRoom::with(['previewMembers', 'category'])->withCount('members');
 
@@ -605,10 +612,11 @@ class ChatRoomController extends Controller
         ];
     }
 
-    public function updateRoomStatus(UpdateRoomStatusRequest $request)
+    public function updateRoomStatus($locale, UpdateRoomStatusRequest $request)
     {
         ChatRoom::whereIn('id', $request['ids'])
         ->update(['status' => $request['status']]);
+
         return [
             'updatedRooms' => $request['ids'],
         ];
@@ -629,9 +637,10 @@ class ChatRoomController extends Controller
         ]);
     }
 
-    public function createChatRoomsPannel(CreateRoomRequest $request)
+    public function createChatRoomsPannel($locale, CreateRoomRequest $request)
     {
         $data = $request->only(ChatRoom::getModel()->fillable);
+
         if ($request->hasFile('file')){
             $fileService = new FileService();
             $fileUrl = $fileService->uploadOneFile(
@@ -641,24 +650,25 @@ class ChatRoomController extends Controller
             $data['banner_url'] = $fileUrl['url'];
         }
         $room = ChatRoom::create($data);
+
         if ($request->filled('members')) {
             $room->members()->attach($request->members);
         }
+        
         return response()->json(
             $room
         );
     }
 
-    public function deleteRoom($local, ChatRoom $slug)
+    public function deleteRoom($locale, ChatRoom $slug)
     {
         $slug->members()->detach();
         $slug->delete();
-
         return response(
             "OK", 200);
     }
 
-    public function getChatData($local, ChatRoom $room)
+    public function getChatData($locale, ChatRoom $room)
     {
         $data = [
             'roomId' => $room->id,
@@ -683,9 +693,10 @@ class ChatRoomController extends Controller
         return response()->json($data);
     }
 
-    public function updateChat($local, UpdateRoomRequest $request,ChatRoom $room)
+    public function updateChat($locale, UpdateRoomRequest $request,ChatRoom $room)
     {
         $data = $request->only(ChatRoom::getModel()->fillable);
+
         if ($request->file('file')){
             $fileService = new FileService();
             $fileUrl = $fileService->uploadOneFile(
@@ -694,10 +705,12 @@ class ChatRoomController extends Controller
             );
             $data['banner_url'] = $fileUrl;
         }
+
         $room->update($data);
         if ($request->filled('members')) {
             $room->members()->sync($request->members);
         }
+        
         return response()->json(
             $room
         );
@@ -708,14 +721,14 @@ class ChatRoomController extends Controller
         $user = Auth::user();
 
         $chatRoomIds = ChatRoomMembership::where('user_id', $user->id)->pluck('chat_room_id');
-
         $myRoom = ChatRoom::whereIn('id', $chatRoomIds)->get();
 
         return [
             'myRoom' => ChatRoomResource::collection($myRoom),
         ];
     }
-    public function userCanChangeRoomInfo($room)
+    
+    public function userCanChangeRoomInfo($locale, $room)
     {
         $user = Auth::user();
         $checkUser = $room->members()->pluck('community_chat_room_memberships.user_id')->toArray();

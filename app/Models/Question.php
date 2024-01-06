@@ -37,17 +37,6 @@ class Question extends Model
 
     public function answers($userCheck=false)
     {
-        if (!$userCheck){
-            if (Auth::user()){
-                return $this->hasMany(Answer::class)->where('status', 'approved')
-                    ->orWhere(function ($query) {
-                        $query->where('status', 'waiting_for_approval')
-                            ->where('user_id', Auth::user()->id );
-                    });
-            }else{
-                return $this->hasMany(Answer::class)->where('status', 'approved');
-            }
-        }
         return $this->hasMany(Answer::class)->where('status', 'approved');
     }
 

@@ -218,7 +218,7 @@ class ChatRoomController extends Controller
             $request,
             max_count: 3,
             max_size_mb: 10,
-            types: ['jpg', 'jpeg', 'png'],
+            types: ['jpg', 'jpeg', 'png','webp'],
             format_result_as_attachment: true,
             storage_key: 'community',
         );
@@ -408,11 +408,11 @@ class ChatRoomController extends Controller
 
     public function uploadCover($locale, ChatRoom $chat_slug, RoomCoverRequest $request)
     {
-        if(!$this->userCanChangeRoomInfo($chat_slug)){
+        /*if(!$this->userCanChangeRoomInfo($chat_slug)){
             return response()->json([
                 'message' => 'برای تغییر در اتاق باید عضو اتاق باشید.',
             ], 400);
-        }
+        }*/
         $fileService = new FileService();
         $fileUrl = $fileService->uploadOneFile(
             $request,
@@ -482,11 +482,11 @@ class ChatRoomController extends Controller
 
     public function removeRoomMember($locale, Category $category_slug, ChatRoom $chat_slug,AddRemoveMemberRequest $request)
     {
-        if(!$this->userCanChangeRoomInfo($chat_slug)){
+        /*if(!$this->userCanChangeRoomInfo($chat_slug)){
             return response()->json([
                 'message' => 'برای تغییر در اتاق باید عضو اتاق باشید.',
             ], 400);
-        }
+        }*/
         $member = UserProfile::find($request->memberId);
         $chat_slug->members()->detach($member->id);
         $memberCount =  $chat_slug->members()->count();
@@ -514,11 +514,11 @@ class ChatRoomController extends Controller
 
     public function editRoomDescription($locale, Category $category_slug, ChatRoom $room,EditDescriptionRequest $request)
     {
-        if(!$this->userCanChangeRoomInfo($room)){
+        /*if(!$this->userCanChangeRoomInfo($room)){
             return response()->json([
                 'message' => 'برای تغییر در اتاق باید عضو اتاق باشید.',
             ], 400);
-        }
+        }*/
         $room->update(['description' => $request->description]);
 
         $data =[

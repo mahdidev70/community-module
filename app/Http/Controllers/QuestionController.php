@@ -264,14 +264,15 @@ class QuestionController extends Controller
             ->select('slug', 'text AS title')
             ->get();
 
-        $answers = $question->allAnswers()->where('status', 'approved');
+       /* $answers = $question->allAnswers()->where('status', 'approved');
         if (Auth::user()){
             $answers->orWhere(function ($query) {
                 $query->where('status', 'waiting_for_approval')
                     ->where('user_id', Auth::user()->id );
             });
-        }
-        $answers->with('user')
+        }*/
+        $answers = $question->answers()
+            ->with('user')
             ->latest('created_at')
             ->get()
             ->map(function($answer) {

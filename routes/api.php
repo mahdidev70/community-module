@@ -24,37 +24,34 @@ use TechStudio\Community\app\Http\Controllers\SearchController;
 Route::get('/question/search', [SearchController::class, 'searchQuestion']);
 
 Route::prefix('community')->group(function() {
+    Route::middleware("auth:sanctum")->group(function () {
+        Route::prefix('chat')->group(function () {
 
-    Route::prefix('chat')->group(function() {
+            Route::get('rooms/common', [ChatRoomController::class, 'getChatRoomsCommon'])->can('chat-room'); // Done
+            Route::get('rooms/data', [ChatRoomController::class, 'getChatRoomsData'])->can('chat-room'); // Done
+            Route::get('join/{chat_slug?}', [ChatRoomController::class, 'join']); // Done
+            Route::post('room/{chat_slug}/upload_cover', [ChatRoomController::class, 'uploadCover'])->can('community');
+            Route::get('{category_slug}/{chat_slug}/common', [ChatRoomController::class, 'getSingleChatPageCommonData'])->can('chat-room');// Done
+            Route::get('{category_slug}/{chat_slug}/members', [ChatRoomController::class, 'getChatRoomMembers'])->can('chat-room');// Done
 
-        Route::get('rooms/common', [ChatRoomController::class, 'getChatRoomsCommon']); // Done
-        Route::get('rooms/data', [ChatRoomController::class, 'getChatRoomsData']); // Done
-        Route::get('join/{chat_slug?}', [ChatRoomController::class,'join']); // Done
-        Route::post('room/{chat_slug}/upload_cover', [ChatRoomController::class,'uploadCover']);
-        Route::get('{category_slug}/{chat_slug}/common', [ChatRoomController::class,'getSingleChatPageCommonData']); // Done
-        Route::get('{category_slug}/{chat_slug}/members', [ChatRoomController::class,'getChatRoomMembers']);
-        Route::middleware("auth:sanctum")->group(function () {
-
-            Route::post('add/{chat_slug}', [ChatRoomController::class,'addMember']); // Done
-            Route::get('{category_slug}/{chat_slug}/data', [ChatRoomController::class,'getSingleChatPageMessages']);
-            Route::put('{category_slug}/{chat_slug}/editDescription', [ChatRoomController::class,'editRoomDescription']);
-            Route::post('{category_slug}/{chat_slug}/removeMember', [ChatRoomController::class,'removeRoomMember']);
-            Route::post('{category_slug}/{room}/message', [ChatRoomController::class,'postChatMessage']);
-            Route::post('attachment', [ChatRoomController::class,'newAttachment']); //File
-            Route::delete('message/{message_id}', [ChatRoomController::class,'deleteMessage']);
-            Route::post('reaction', [ChatMessageReactController::class, 'saveChatReact']);
-            Route::get('recentChatsSidebar', [ChatRoomController::class,'recentChatsSidebar']); //user and userProfile
-            Route::get('question/{slug}', [QuestionController::class, 'singleQuestionData']); // Done
-
+            Route::post('add/{chat_slug}', [ChatRoomController::class, 'addMember'])->can('community'); // Done
+            Route::get('{category_slug}/{chat_slug}/data', [ChatRoomController::class, 'getSingleChatPageMessages'])->can('chat-room');
+            Route::put('{category_slug}/{chat_slug}/editDescription', [ChatRoomController::class, 'editRoomDescription'])->can('community');
+            Route::post('{category_slug}/{chat_slug}/removeMember', [ChatRoomController::class, 'removeRoomMember'])->can('community');
+            Route::post('{category_slug}/{room}/message', [ChatRoomController::class, 'postChatMessage'])->can('chat-room');
+            Route::post('attachment', [ChatRoomController::class, 'newAttachment'])->can('chat-room'); //File
+            Route::delete('message/{message_id}', [ChatRoomController::class, 'deleteMessage'])->can('community');
+            Route::post('reaction', [ChatMessageReactController::class, 'saveChatReact'])->can('chat-room');
+            Route::get('recentChatsSidebar', [ChatRoomController::class, 'recentChatsSidebar'])->can('chat-room'); //user and userProfile
         });
     });
+
+    Route::get('question/{slug}', [QuestionController::class, 'singleQuestionData']); // Done
     Route::get('homepage/common', [CommunityHomePageController::class, 'getHomepageCommonData']); //user and userProfile
     Route::get('homepage/data', [QuestionController::class, 'getHomepageQuestionsData']); // Done
 
     Route::middleware("auth:sanctum")->group(function () {
-
         Route::prefix('questions')->group(function (){
-
             Route::post('{question_slug}/feedback', [QuestionController::class, 'storeFeedbackToQuestion']); // Done
             Route::post('new', [QuestionController::class, 'newQuestion']); // Done
             Route::post('attachment', [QuestionController::class, 'newAttachment']);

@@ -20,7 +20,7 @@ class ChatMessage extends Model
 
     public function user()
     {
-        return $this->belongsTo(UserProfile::class, 'user_id');  # FIXME CRITICAL n+1???
+        return $this->belongsTo(UserProfile::class, 'user_id','user_id');  # FIXME CRITICAL n+1???
     }
 
     public function reply_to_object()

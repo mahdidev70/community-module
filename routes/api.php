@@ -70,7 +70,7 @@ Route::prefix('community')->group(function() {
     // ================================================ PANEL =================================================
 Route::middleware("auth:sanctum")->group(function () {
 
-    Route::prefix('panel')->group(function () {
+    Route::prefix('panel')->middleware('can:community')->group(function () {
         Route::prefix('question')->group(function () {
 
             Route::get('list', [QuestionController::class, 'getQuestionList']); // Done

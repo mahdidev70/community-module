@@ -19,7 +19,7 @@ class Answer extends Model
     protected $guarded = ['id'];
 
     public function user() {
-        return $this->belongsTo(UserProfile::class, 'user_id');
+        return $this->belongsTo(UserProfile::class, 'user_id','user_id');
     }
 
     public function question()

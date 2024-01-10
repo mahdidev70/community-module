@@ -32,7 +32,7 @@ class Question extends Model
 
     public function asker()
     {
-        return $this->belongsTo(UserProfile::class, 'asker_user_id');
+        return $this->belongsTo(UserProfile::class, 'asker_user_id','user_id');
     }
 
     public function answers($userCheck=false)
@@ -61,7 +61,7 @@ class Question extends Model
         return $this->morphMany(Like::class, 'likeable')->where('action', 'like');
     }
 
-    protected static function boot()
+    /*protected static function boot()
     {
         parent::boot();
 
@@ -72,5 +72,5 @@ class Question extends Model
                 $builder->where('status', 'approved');
             }
         });
-    }
+    }*/
 }

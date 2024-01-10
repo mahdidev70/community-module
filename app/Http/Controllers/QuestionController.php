@@ -33,14 +33,14 @@ class QuestionController extends Controller
         $this->questionRepository = $questionRepository;
     }
 
-    private function formatQuestion($question)
+    private function formatQuestion($local,$question)
     {
         $data = [
             "text" => $question->text,
             "creationDate" => $question->created_at,
             "category" => [
-                "title" => $question->category->title,
-                "slug" => $question->category->slug
+                "title" => $question->category?$question->category->title:null,
+                "slug" => $question->category?$question->category->slug:null
             ],
             'asker' => [
                 'id' => $question->asker->id,

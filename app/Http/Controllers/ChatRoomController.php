@@ -23,6 +23,7 @@ use TechStudio\Community\app\Http\Requests\RoomCoverRequest;
 use TechStudio\Community\app\Http\Requests\UpdateRoomRequest;
 use TechStudio\Community\app\Http\Requests\UpdateRoomStatusRequest;
 use TechStudio\Community\app\Http\Resources\ChatRoomResource;
+use TechStudio\Community\app\Http\Resources\ChatRoomsResource;
 use TechStudio\Community\app\Models\ChatMessage;
 use TechStudio\Community\app\Models\ChatRoom;
 use TechStudio\Community\app\Models\ChatRoomMembership;
@@ -721,11 +722,10 @@ class ChatRoomController extends Controller
         $user = Auth::user();
 
         $chatRoomIds = ChatRoomMembership::where('user_id', $user->id)->pluck('chat_room_id');
-        $myRoom = ChatRoom::whereIn('id', $chatRoomIds)->get();
 
-        return [
-            'myRoom' => ChatRoomResource::collection($myRoom),
-        ];
+        $myRoom = ChatRoom::whereIn('id', $chatRoomIds)->paginate();
+
+        return  new ChatRoomsResource($myRoom);
     }
     
     public function userCanChangeRoomInfo($locale, $room)

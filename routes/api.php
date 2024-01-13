@@ -27,8 +27,8 @@ Route::prefix('community')->group(function() {
     Route::middleware("auth:sanctum")->group(function () {
         Route::prefix('chat')->group(function () {
 
-            Route::get('rooms/common', [ChatRoomController::class, 'getChatRoomsCommon'])->can('chat-room'); // Done
-            Route::get('rooms/data', [ChatRoomController::class, 'getChatRoomsData'])->can('chat-room'); // Done
+            Route::get('rooms/common', [ChatRoomController::class, 'getChatRoomsCommon']); // Done
+            Route::get('rooms/data', [ChatRoomController::class, 'getChatRoomsData']); // Done
             Route::get('join/{chat_slug?}', [ChatRoomController::class, 'join']); // Done
             Route::post('room/{chat_slug}/upload_cover', [ChatRoomController::class, 'uploadCover'])->can('community');
             Route::get('{category_slug}/{chat_slug}/common', [ChatRoomController::class, 'getSingleChatPageCommonData'])->can('chat-room');// Done

@@ -628,8 +628,8 @@ class ChatRoomController extends Controller
         $categories =  $this->categoryService->getCategoriesForFilter(new ChatRoom());
         $users = UserProfile::where('status','active')->get()
                 ->map(fn($user)=>[
-                    'userId' => $user->id,
-                    'userDisplayName' => $user->getDisplayName(),
+                    'id' => $user->id,
+                    'displayName' => $user->getDisplayName(),
                     'avatarUrl' => $user->avatar_url,
                 ]);
         return response()->json([
@@ -638,27 +638,41 @@ class ChatRoomController extends Controller
         ]);
     }
 
-    public function createChatRoomsPannel($locale, CreateRoomRequest $request)
+    public function createUpdateChatRoomsPannel(CreateRoomRequest $request)
     {
-        $data = $request->only(ChatRoom::getModel()->fillable);
+        // $data = $request->only(ChatRoom::getModel()->fillable);
+        // if ($request->hasFile('file')){
+        //     $fileService = new FileService();
+        //     $fileUrl = $fileService->uploadOneFile(
+        //         $request,
+        //         storage_key: 'community',
+        //     );
+        //     $data['banner_url'] = $fileUrl['url'];
+        // }
+        // $room = ChatRoom::create($data);
+        // if ($request->filled('members')) {
+        //     $room->members()->attach($request->members);
+        // }
+        // return response()->json(
+        //     $room
+        // );
 
-        if ($request->hasFile('file')){
-            $fileService = new FileService();
-            $fileUrl = $fileService->uploadOneFile(
-                $request,
-                storage_key: 'community',
-            );
-            $data['banner_url'] = $fileUrl['url'];
-        }
-        $room = ChatRoom::create($data);
-
-        if ($request->filled('members')) {
-            $room->members()->attach($request->members);
-        }
-        
-        return response()->json(
-            $room
+        $room = ChatRoom::updateOrCreate(
+            ['id' => $request['id']],
+            [
+                'category_id' => $request['categoryId'],
+                'course_id' => $request['courseId'],
+                'title' => $request['title'],
+                'slug' => SlugGenerator::transform($request['title']),
+                'is_private' => $request['isPrivate'],
+                'max_member' => $request['maxMember'],
+                'banner_url' => $request['bannerUrl'],
+                'avatar_url' => $request['avatarUrl'],
+                'description' => $request['description'],
+            ]
         );
+
+        return new ChatRoomResource($room);
     }
 
     public function deleteRoom($locale, ChatRoom $slug)
@@ -669,29 +683,10 @@ class ChatRoomController extends Controller
             "OK", 200);
     }
 
-    public function getChatData($locale, ChatRoom $room)
+    public function getChatData($locale, $id)
     {
-        $data = [
-            'roomId' => $room->id,
-            'slug' => $room->slug,
-            'title' => $room->title,
-            'category' => [
-                'slug' => $room->category->slug,
-                'title' => $room->category->title,
-            ],
-            'is_private' => $room->is_private,
-            'membersCount' => $room->members->count(),
-            'avatarUrl' => $room->avatar_url,
-            'bannerUrl' => $room->banner_url,
-            /*'membersListSummary' => $room->previewMembers->take(5)->map(fn($membership) => [
-                'id' => $membership->id,
-                'displayName' => $membership->getDisplayName(),
-                'secondaryText' => $membership->email,
-                'avatarUrl' => $membership->avatar_url,
-            ]),*/
-            'description' => $room->description
-        ];
-        return response()->json($data);
+        $room = ChatRoom::with(['category', 'members'])->where('id', $id)->firstOrFail();
+        return new ChatRoomResource($room);
     }
 
     public function updateChat($locale, UpdateRoomRequest $request,ChatRoom $room)

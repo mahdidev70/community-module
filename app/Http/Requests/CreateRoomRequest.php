@@ -26,13 +26,13 @@ class CreateRoomRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => ['integer'],
-            'title' => ['required','string','unique:community_chat_rooms,title'],
-            'slug' => ['required','unique:community_chat_rooms,slug'],
-            'category_slug' => ['required', 'string', 'exists:core_categories,slug'],
+            'title' => ['required', Rule::unique('chat_rooms')->ignore($this->room)],
+            // 'title' => ['string','unique:chat_rooms,title'],
+            'slug' => ['required','unique:chat_rooms,slug'],
+            'categoryId' => ['required'],
             'file' => ['nullable','max:2048','mimes:jpeg,png,jpg,gif'],
             'status' => ['required',Rule::in(['active','inactive','draft'])],
-            'members.*' => ['nullable','exists:core_user_profiles,id',]
+            'members.*' => ['nullable','exists:user_profiles,id',]
         ];
     }
 

@@ -91,8 +91,8 @@ Route::middleware("auth:sanctum")->group(function () {
             Route::get('rooms/data', [ChatRoomController::class, 'getChatRoomsPannelData'])->can('read_rooms'); // Done
             Route::put('set_status', [ChatRoomController::class, 'updateRoomStatus'])->can('set_room_status'); // Done
             Route::get('rooms/create/common', [ChatRoomController::class, 'getCreatChatRoomsPannelCommon'])->can('add_room'); // Done
-            Route::post('rooms/create', [ChatRoomController::class, 'createChatRoomsPannel'])->can('add_room'); // Done
-            Route::get('show/{room}', [ChatRoomController::class, 'getChatData'])->can('show_room'); // Done
+            Route::put('ooms/editor-data', [ChatRoomController::class, 'createUpdateChatRoomsPannel'])->can('add_room'); // Done
+            Route::get('show/{id}', [ChatRoomController::class, 'getChatData'])->can('show_room'); // Done
             Route::post('update/{room}', [ChatRoomController::class, 'updateChat'])->can('edit_room'); // Done
             Route::delete('{slug}', [ChatRoomController::class, 'deleteRoom'])->can('delete_room'); // Done
 

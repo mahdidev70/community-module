@@ -18,7 +18,7 @@ class ChatRoomResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'slug' => $this->slug,
-            'description' => $this->discription,
+            'description' => $this->description,
             'isPrivate' => $this->is_private,
             'status' => $this->status,
             'avatarUrl' => $this->avatar_url,
@@ -27,6 +27,7 @@ class ChatRoomResource extends JsonResource
             'maxMember' => $this-> max_member,
             'memberCount' => $this->members->count(),
             'joinLink' => route('join.chatroom').'/'.$this->slug,
+            'categoryId' => $this->category->id,
             'category' => [
                 'id' => $this->category->id,
                 'title' => $this->category->title,

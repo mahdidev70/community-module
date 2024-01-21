@@ -26,21 +26,12 @@ class CreateRoomRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['required', Rule::unique('chat_rooms')->ignore($this->room)],
-            // 'title' => ['string','unique:chat_rooms,title'],
-            'slug' => ['required','unique:chat_rooms,slug'],
+            'title' => ['string', Rule::unique('chat_rooms')->ignore($this->room)],
+            'slug' => ['string'],
             'categoryId' => ['required'],
             'file' => ['nullable','max:2048','mimes:jpeg,png,jpg,gif'],
             'status' => ['required',Rule::in(['active','inactive','draft'])],
             'members.*' => ['nullable','exists:user_profiles,id',]
         ];
-    }
-
-    public function prepareForValidation()
-    {
-        $this->merge([
-           'slug'=> SlugGenerator::transform(($this->title)),
-            'category_id' => Category::where('slug', $this->category_slug)->first()->id
-        ]);
     }
 }

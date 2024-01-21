@@ -640,30 +640,13 @@ class ChatRoomController extends Controller
 
     public function createUpdateChatRoomsPannel(CreateRoomRequest $request)
     {
-        // $data = $request->only(ChatRoom::getModel()->fillable);
-        // if ($request->hasFile('file')){
-        //     $fileService = new FileService();
-        //     $fileUrl = $fileService->uploadOneFile(
-        //         $request,
-        //         storage_key: 'community',
-        //     );
-        //     $data['banner_url'] = $fileUrl['url'];
-        // }
-        // $room = ChatRoom::create($data);
-        // if ($request->filled('members')) {
-        //     $room->members()->attach($request->members);
-        // }
-        // return response()->json(
-        //     $room
-        // );
-
         $room = ChatRoom::updateOrCreate(
             ['id' => $request['id']],
             [
                 'category_id' => $request['categoryId'],
                 'course_id' => $request['courseId'],
                 'title' => $request['title'],
-                'slug' => SlugGenerator::transform($request['title']),
+                'slug' => $request['slug'] ? $request['slug'] : SlugGenerator::transform($request['title']),
                 'is_private' => $request['isPrivate'],
                 'max_member' => $request['maxMember'],
                 'banner_url' => $request['bannerUrl'],
@@ -671,6 +654,10 @@ class ChatRoomController extends Controller
                 'description' => $request['description'],
             ]
         );
+
+        if ($request->filled('members')) {
+            $room->members()->sync($request->members);
+        }
 
         return new ChatRoomResource($room);
     }

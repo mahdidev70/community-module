@@ -575,6 +575,11 @@ class ChatRoomController extends Controller
     {
         $query = ChatRoom::with(['previewMembers', 'category'])->withCount('members');
 
+        $sortOrder= 'desc';
+        if (isset($request->sortOrder) && ($request->sortOrder ==  'asc' || $request->sortOrder ==  'desc')) {
+            $sortOrder = $request->sortOrder;
+        }
+
         if ($request->anyFilled(['search', 'categorySlug'])) {
             if ($request->filled('search')) {
                 $txt = $request->get('search');
@@ -588,29 +593,9 @@ class ChatRoomController extends Controller
                 });
             }
         }
-        $rooms =  $query->paginate(12);
-        $data = $rooms->map(fn ($room) => [
-            'roomId' => $room->id,
-            'slug' => $room->slug,
-            'title' => $room->title,
-            'category' => [
-                'slug' => $room->category->slug,
-                'title' => $room->category->title,
-            ],
-            'is_private' => $room->is_private,
-            'membersCount' => $room->members_count,
-            'avatarUrl' => $room->avatar_url,
-            'bannerUrl' => $room->banner_url,
-            'description' => $room->description
-        ]);
 
-        return [
-            'total' => $rooms->total(),
-            'per_page' => $rooms->perPage(),
-            'last_page' => $rooms->lastPage(),
-            'current_page' => $rooms->currentPage(),
-            'data' => $data
-        ];
+        $rooms =  $query->orderBy('id', 'desc')->paginate(12);
+        return new ChatRoomsResource($rooms);
     }
 
     public function updateRoomStatus($locale, UpdateRoomStatusRequest $request)

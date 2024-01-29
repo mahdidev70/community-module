@@ -33,7 +33,7 @@ class QuestionController extends Controller
         $this->questionRepository = $questionRepository;
     }
 
-    private function formatQuestion($local,$question)
+    private function formatQuestion($question)
     {
         $data = [
             "text" => $question->text,

@@ -38,10 +38,10 @@ class AnswerRepository implements AnswerRepositoryInterface
             });
         }
         if (isset($data->creationDateMax) && $data->creationDateMax != null) {
-            $query->whereDate('created_at', '>=', $data->input('creationDateMax'));
+            $query->whereDate('created_at', '<=', $data->input('creationDateMax'));
         }
         if (isset($data->creationDateMin) && $data->creationDateMin != null) {
-            $query->whereDate('created_at', '<=', $data->input('creationDateMin'));
+            $query->whereDate('created_at', '>=', $data->input('creationDateMin'));
         }
         if (isset($data->status) && $data->status != null) {
             $query->where('status', $data->input('status'));

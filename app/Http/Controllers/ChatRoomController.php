@@ -38,7 +38,7 @@ class ChatRoomController extends Controller
     public function __construct(protected FileService $fileService, protected ChatService $chatService,protected CategoryService $categoryService)
     {}
 
-    public function getSingleChatPageCommonData($locale, $category_slug, $chat_slug) 
+    public function getSingleChatPageCommonData($locale, $category_slug, $chat_slug)
     {
         $category_id = Category::where('slug', $category_slug)->where('status','active')->firstOrFail()->id;
 
@@ -66,7 +66,7 @@ class ChatRoomController extends Controller
                 'secondaryText' => $membership->email,
                 'avatarUrl' => $membership->avatar_url,
             ]),
-            'otherRooms' => $this->getOtherRooms($chat_slug),
+            'otherRooms' => $this->getOtherRooms($locale,$chat_slug),
             'description' => $room->description
         ];
     }
@@ -213,7 +213,7 @@ class ChatRoomController extends Controller
         return $response;
     }
 
-    public function newAttachment($locale, Request $request) 
+    public function newAttachment($locale, Request $request)
     {
         $createdFiles = $this->fileService->upload(
             $request,
@@ -248,7 +248,7 @@ class ChatRoomController extends Controller
         ]);
     }
 
-    public function recentChatsSidebar() 
+    public function recentChatsSidebar()
     {
         $userId = Auth::user()->id;
         $message = $this->chatService->getSidebar();
@@ -678,7 +678,7 @@ class ChatRoomController extends Controller
         if ($request->filled('members')) {
             $room->members()->sync($request->members);
         }
-        
+
         return response()->json(
             $room
         );
@@ -694,7 +694,7 @@ class ChatRoomController extends Controller
 
         return  new ChatRoomsResource($myRoom);
     }
-    
+
     public function userCanChangeRoomInfo($locale, $room)
     {
         $user = Auth::user();

@@ -15,7 +15,7 @@ class Answer extends Model
     use HasFactory, Likeable, Attachable;
 
     protected $table = 'community_answers';
-    
+
     protected $guarded = ['id'];
 
     public function user() {
@@ -27,12 +27,12 @@ class Answer extends Model
         return $this->belongsTo(Question::class);
     }
 
-    public function dislikes()
+    public function getDislikes()
     {
         return $this->morphMany(Like::class, 'likeable')->where('action', 'dislike');
     }
 
-    public function likes()
+    public function getLikes()
     {
         return $this->morphMany(Like::class, 'likeable')->where('action', 'like');
     }

@@ -90,8 +90,8 @@ class AnswerController extends Controller
         $answer->$functionName(Auth::user()->id);
         return [
             'feedback' => [
-                'likesCount' => $answer->likes_count??0,
-                'dislikesCount' => $answer->dislikes_count??0,
+                'likesCount' => $answer->getLikes()->count()??0,
+                'dislikesCount' => $answer->getDislikes()->count()??0,
                 'currentUserAction' => $currentUserAction,
             ],
         ];

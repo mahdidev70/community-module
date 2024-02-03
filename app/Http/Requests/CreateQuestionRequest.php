@@ -25,7 +25,7 @@ class CreateQuestionRequest extends FormRequest
         return [
            'text' => ['required','string'],
             'attachments' => ['nullable','array', 'max:3'],
-            'attachments.*' => ['integer','exists:files,id'],
+            'attachments.*' => ['integer','exists:core_files,id'],
             'categorySlug' => ['required','string'],
             'slug' => ['required','unique:community_questions,slug'],
         ];

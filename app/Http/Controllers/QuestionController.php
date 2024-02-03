@@ -132,12 +132,12 @@ class QuestionController extends Controller
             } else if ($request->sort == 'views') {
                 $questions->orderBy('viewsCount', 'DESC');
             } else if ($request->sort == 'likes') {
-                $questions->rightJoin('likes', function ($join) {
-                    $join->on('questions.id', '=', 'likes.likeable_id')
-                        ->where('likes.likeable_type', '=', 'App\Models\Question');
-                })->select('questions.*', DB::raw('COUNT(likes.action) as like_count'))
-                    ->where('likes.action', '=', 'like')
-                    ->groupBy('questions.id')
+                $questions->rightJoin('core_likes', function ($join) {
+                    $join->on('community_questions.id', '=', 'core_likes.likeable_id')
+                        ->where('core_likes.likeable_type', '=', 'TechStudio\Community\app\Models\Question');
+                })->select('community_questions.*', DB::raw('COUNT(core_likes.action) as like_count'))
+                    ->where('core_likes.action', '=', 'like')
+                    ->groupBy('community_questions.id')
                     ->orderByDesc('like_count');
             } else if($request->sort == 'noneAnswer'){
 

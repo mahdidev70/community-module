@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use TechStudio\Community\app\Models\ChatRoom;
+use TechStudio\Community\app\Models\Question;
 use TechStudio\Core\app\Models\Category;
 
 class CommunityHomePageController extends Controller
@@ -14,7 +15,8 @@ class CommunityHomePageController extends Controller
     public function getHomepageCommonData(Request $request)
     {
         $userRoomsCount = 0;
-        $categories = Category::get(['slug','title']);
+        $questionModel = new Question();
+        $categories = Category::where('table_type', get_class($questionModel))->get(['slug','title']);
         $suggestedChatRooms = ChatRoom::where('status', 'active')->take(3)->latest()->with('category', 'previewMembers')->withCount('members')->get()
         ->map(fn($room) => [
             'roomId' => $room->id,

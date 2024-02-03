@@ -51,12 +51,12 @@ class Question extends Model
     }
 
 
-    public function dislikes()
+    public function getDislikes()
     {
         return $this->morphMany(Like::class, 'likeable')->where('action', 'dislike');
     }
 
-    public function likes()
+    public function getLikes()
     {
         return $this->morphMany(Like::class, 'likeable')->where('action', 'like');
     }

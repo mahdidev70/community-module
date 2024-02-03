@@ -214,8 +214,8 @@ class QuestionController extends Controller
           $question_query->$functionName(Auth::user()->id);
           return [
               'feedback' => [
-                  'likesCount' => $question_query->likes_count??0,
-                  'dislikesCount' => $question_query->dislikes_count??0,
+                  'likesCount' => $question_query->getLikes()->count()??0,
+                  'dislikesCount' => $question_query->getDislikes()->count()??0,
                   'currentUserAction' => $currentUserAction,
               ],
           ];

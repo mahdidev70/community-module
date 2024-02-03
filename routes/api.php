@@ -83,6 +83,7 @@ Route::middleware("auth:sanctum")->group(function () {
         Route::get('answers/list', [AnswerController::class, 'getAnswerList']); // Done
         Route::get('answers/list/common', [AnswerController::class, 'getAnswerListCommon']); // Done
         Route::put('answer/set_status', [AnswerController::class, 'updateAnswerStatus']); // Done
+        Route::put('answer/answer_edit', [AnswerController::class, 'createUpdateAnswer']); //Done
 
         // ========== Chatrooms Panel ===========
         Route::prefix('chat')->group(function () {

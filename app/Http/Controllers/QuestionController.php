@@ -257,6 +257,7 @@ class QuestionController extends Controller
         }
         $question->increment('viewsCount');
         $data = $this->formatQuestion($question);
+
         $relevantQuestions = Question::where('category_id', $question->category_id)
             ->where('status', 'approved')
             ->latest('created_at')
@@ -264,14 +265,7 @@ class QuestionController extends Controller
             ->select('slug', 'text AS title')
             ->get();
 
-       /* $answers = $question->allAnswers()->where('status', 'approved');
-        if (Auth::user()){
-            $answers->orWhere(function ($query) {
-                $query->where('status', 'waiting_for_approval')
-                    ->where('user_id', Auth::user()->id );
-            });
-        }*/
-        $answers = $question->answers()
+        $questionAnswers = $question->answers()
             ->with('user')
             ->latest('created_at')
             ->get()
@@ -280,6 +274,28 @@ class QuestionController extends Controller
             })
             ->toArray();
 
+        /* $answers = $question->allAnswers()->where('status', 'approved');
+         if (Auth::user()){
+             $answers->orWhere(function ($query) {
+                 $query->where('status', 'waiting_for_approval')
+                     ->where('user_id', Auth::user()->id );
+             });
+         }*/
+        $userAnswers = [];
+        if (Auth::user()) {
+            $userAnswers = $question->allAnswers()
+                ->where(function ($query) {
+                    $query->where('user_id', Auth::user()->id)->where('status', 'waiting_for_approval');
+                    })
+                ->with('user')
+                ->latest('created_at')
+                ->get()
+                ->map(function ($answer) {
+                    return $this->formatAnswer($answer);
+                })
+                ->toArray();
+        }
+        $answers = array_merge($userAnswers,$questionAnswers);
         $sort_function = null;
         if ($request->query('sortBy', 'recent') == 'recent') {
         } else if ($request->query('sortBy') == 'likes') {

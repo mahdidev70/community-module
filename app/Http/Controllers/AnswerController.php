@@ -48,8 +48,8 @@ class AnswerController extends Controller
             "creationDate" => $answer->created_at,
             "status" => $answer->status,
             "category" => [
-                "title" => $slug->category->title,
-                "slug" => $slug->category->slug
+                "title" => $slug->category? $slug->category->title: null,
+                "slug" => $slug->category? $slug->category->slug:null
             ],
             'asker' => [
                 'id' => $answer->user->id,

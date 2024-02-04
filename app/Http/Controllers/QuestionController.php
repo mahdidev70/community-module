@@ -274,13 +274,6 @@ class QuestionController extends Controller
             })
             ->toArray();
 
-        /* $answers = $question->allAnswers()->where('status', 'approved');
-         if (Auth::user()){
-             $answers->orWhere(function ($query) {
-                 $query->where('status', 'waiting_for_approval')
-                     ->where('user_id', Auth::user()->id );
-             });
-         }*/
         $userAnswers = [];
         if (Auth::user()) {
             $userAnswers = $question->allAnswers()

@@ -61,7 +61,7 @@ class QuestionController extends Controller
                     'contentUrl' => $file->file_url,
                 ];
             }),
-
+            'viewsCount' => $question->viewsCount
         ];
 
         $relevantQuestions = Question::where('category_id',$question->category_id)
@@ -250,12 +250,15 @@ class QuestionController extends Controller
     public function singleQuestionData($local, $question_slug, Request $request)
     {
         $question = Question::where('slug', $question_slug)->with(['asker', 'category'])->firstOrFail();
+        $question->update([
+            "viewsCount" => $question->viewsCount? $question->viewsCount+1 :1
+        ]);
+        /*return $question->increment('viewsCount');*/
         if ($question->status != 'approved' &&  Auth::user()->id != $question->asker_user_id){
             return response()->json(
                 ['message' => "باید ابتدا سوال تایید گردد."], 400
             );
         }
-        $question->increment('viewsCount');
         $data = $this->formatQuestion($question);
 
         $relevantQuestions = Question::where('category_id', $question->category_id)

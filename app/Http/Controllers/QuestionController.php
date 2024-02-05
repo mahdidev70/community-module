@@ -164,6 +164,7 @@ class QuestionController extends Controller
                 'text' => $q->text,
                 'status' => $q->status,
                 'creationDate' => $q->created_at,
+                'viewsCount' => $q->viewsCount,
                 'category' => [
                     'slug' => $q->category?$q->category->slug:null,
                     'title' => $q->category?$q->category->title:null,

@@ -23,7 +23,7 @@ class ChatRoom extends Model
     {
         parent::boot();
 
-        if (!request()->is(['api/panel/*'])) {
+        if (!request()->is(['*/api/panel/*'])) {
             static::addGlobalScope('publiclyVisible', function (Builder $builder) {
                 $builder->where('status', 'active');
             });
@@ -39,7 +39,7 @@ class ChatRoom extends Model
     }
 
     public function category() {
-        return $this->belongsTo(Category::class, 'category_id')->where('status','active');
+        return $this->belongsTo(Category::class, 'category_id');
     }
 
     public function course() {

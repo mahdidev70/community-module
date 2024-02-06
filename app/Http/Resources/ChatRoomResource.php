@@ -27,11 +27,11 @@ class ChatRoomResource extends JsonResource
             'maxMember' => $this-> max_member,
             'memberCount' => $this->members->count(),
             'joinLink' => route('join.chatroom').'/'.$this->slug,
-            'categoryId' => $this->category->id,
+            'categoryId' => $this->category->id ?? null,
             'category' => [
-                'id' => $this->category->id,
-                'title' => $this->category->title,
-                'slug' => $this->category->slug,
+                'id' => $this->category->id ?? null,
+                'title' => $this->category->title ?? null,
+                'slug' => $this->category->slug ?? null,
             ],
             'members' => ChatRoomMemberResource::collection($this->members),
         ];

@@ -250,7 +250,7 @@ class ChatRoomController extends Controller
 
     public function recentChatsSidebar()
     {
-        $userId = auth()->user()->id;
+        $userId = auth()->id();
         $message = $this->chatService->getSidebar();
 
         RecentChatsSidebar::dispatch($userId, $message['rooms']);

@@ -73,7 +73,7 @@ class ChatRoomController extends Controller
 
     public function getSingleChatPageMessages($locale, $category_slug, $chat_slug)
     {
-        $user = Auth::user();
+        $user = auth()->user();
         $category_id = Category::where('slug', $category_slug)->where('status','active')->firstOrFail()->id;
         $room = ChatRoom::where('category_id', $category_id)->where('slug', $chat_slug)->where('status','active')->firstOrFail();
         $this->chatService->decrementUnreadCount($user->id,$room->id);
@@ -250,7 +250,7 @@ class ChatRoomController extends Controller
 
     public function recentChatsSidebar()
     {
-        $userId = Auth::user()->id;
+        $userId = auth()->user()->id;
         $message = $this->chatService->getSidebar();
 
         RecentChatsSidebar::dispatch($userId, $message['rooms']);
@@ -685,7 +685,7 @@ class ChatRoomController extends Controller
 
     public function getUserRoom()
     {
-        $user = Auth::user();
+        $user = auth()->user();
 
         $chatRoomIds = ChatRoomMembership::where('user_id', $user->id)->pluck('chat_room_id');
 
@@ -696,7 +696,7 @@ class ChatRoomController extends Controller
 
     public function userCanChangeRoomInfo($locale, $room)
     {
-        $user = Auth::user();
+        $user = auth()->user();
         $checkUser = $room->members()->pluck('community_chat_room_memberships.user_id')->toArray();
         if (!$user){
             return response()->json([

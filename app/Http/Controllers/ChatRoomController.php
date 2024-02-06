@@ -164,7 +164,7 @@ class ChatRoomController extends Controller
         if ($request->replyTo) {
             $reply_to_object = ChatMessage::where('room_id', $room->id)->where('id', $request->replyTo)->with('user')->firstOrFail();
         }
-        $user = Auth::user();
+        $user = auth()->user();
         $message = new ChatMessage();
         $message->room_id = $room->id;
         $message->user_id = $user->id;

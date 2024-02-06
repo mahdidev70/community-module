@@ -2,7 +2,6 @@
 
 namespace TechStudio\Community\app\Http\Controllers;
 
-use App\Helper\SlugGenerator;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -28,6 +27,7 @@ use TechStudio\Community\app\Models\ChatMessage;
 use TechStudio\Community\app\Models\ChatRoom;
 use TechStudio\Community\app\Models\ChatRoomMembership;
 use TechStudio\Community\app\Services\ChatService;
+use TechStudio\Core\app\Helper\SlugGenerator;
 use TechStudio\Core\app\Models\Category;
 use TechStudio\Core\app\Models\UserProfile;
 use TechStudio\Core\app\Services\Category\CategoryService;
@@ -643,8 +643,7 @@ class ChatRoomController extends Controller
         if ($request->filled('members')) {
             $room->members()->sync($request->members);
         }
-
-        return new ChatRoomResource($room);
+        return $room->id;
     }
 
     public function deleteRoom($locale, ChatRoom $slug)

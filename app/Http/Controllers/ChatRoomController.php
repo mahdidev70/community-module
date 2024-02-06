@@ -143,7 +143,7 @@ class ChatRoomController extends Controller
     public function postChatMessage($locale, Category $category_slug,ChatRoom $room, Request $request)
     {
         $swearProbability = null;
-        if(!$this->userCanChangeRoomInfo($room)){
+        if(!$this->userCanChangeRoomInfo($locale, $room)){
             return response()->json([
                 'message' => 'برای تغییر در اتاق باید عضو اتاق باشید.',
             ], 400);

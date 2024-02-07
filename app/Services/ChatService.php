@@ -9,7 +9,7 @@ use TechStudio\Community\app\Models\ChatRoom;
 use TechStudio\Core\app\Models\UserProfile;
 class ChatService
 {
-    public function getSidebar() 
+    public function getSidebar()
     {
         $rooms = Auth::user()->chatRooms()->latest()->with('category', 'messages')->withCount('messages')->get()
         ->map(fn($room) => [
@@ -49,7 +49,7 @@ class ChatService
             /*->decrement('unread_count');*/
     }
     public function recentChatsSidebar($room,$loginUser) {
-        $users = $room->members()->where('user_id', '!=', $loginUser)->get();
+        $users = $room->members()->where('community_chat_room_memberships.user_id', '!=', $loginUser)->get();
             $memberIds = $users->pluck('id');
             $rooms = ChatRoom::with('category', 'messages','members')
                ->whereHas('members', function ($query) use ($memberIds) {

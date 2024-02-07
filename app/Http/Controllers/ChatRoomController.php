@@ -145,7 +145,7 @@ class ChatRoomController extends Controller
         $swearProbability = null;
         if(!$this->userCanChangeRoomInfo($locale, $room)){
             return response()->json([
-                'message' => 'برای تغییر در اتاق باید عضو اتاق باشید.',
+                'message' => 'برای ارسال پیغام باید عضو اتاق باشید.',
             ], 400);
         }
         try {
@@ -176,7 +176,7 @@ class ChatRoomController extends Controller
         }
 
         $this->chatService->incrementUnreadCount($user->id,$room->id);
-
+       // return ["ss"=>$user->id,"dd"=>$room->id];
         NewChatMessage::dispatch($room->id, $lastMessage->id, [
             'id' => $message->id,
             'userId' => $user->id,

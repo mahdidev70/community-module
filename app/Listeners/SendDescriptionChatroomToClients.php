@@ -18,6 +18,6 @@ class SendDescriptionChatroomToClients
 
     public function handle(EditDescriptionChatroom $event)
     {
-        logger($event->chatRoom);
+        //logger($event->chatRoom);
     }
 }

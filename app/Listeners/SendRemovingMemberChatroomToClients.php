@@ -21,6 +21,6 @@ class SendRemovingMemberChatroomToClients
      */
     public function handle(RemoveChatroomMember $event)
     {
-        logger($event->removeMember);
+        //logger($event->removeMember);
     }
 }

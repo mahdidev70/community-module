@@ -21,6 +21,6 @@ class SendAddingMemberChatroomToClients
      */
     public function handle(AddChatroomMember $event)
     {
-        logger([$event->member,$event->memberCount]);
+         // logger([$event->member,$event->memberCount]);
     }
 }

@@ -21,6 +21,6 @@ class SendRecentChatsSidebar
      */
         public function handle(RecentChatsSidebar $event): void
     {
-        logger($event->recentChatsSidebar);
+        //logger($event->recentChatsSidebar);
     }
 }

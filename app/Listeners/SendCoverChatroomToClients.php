@@ -18,6 +18,6 @@ class SendCoverChatroomToClients
 
     public function handle(CoverChatRoom $event)
     {
-        logger($event->chatRoom);
+        //logger($event->chatRoom);
     }
 }

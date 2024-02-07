@@ -10,6 +10,6 @@ class SendUnreadCountMember
 {
     public function handle(UnreadCountMember $event)
     {
-        logger([$event->roomId,$event->userId]);
+        //logger([$event->roomId,$event->userId]);
     }
 }

@@ -15,6 +15,6 @@ class SendUpdateChatMessageToClients
 
     public function handle(UpdateChatMessage $event)
     {
-        logger($event->updateMessage);
+        //logger($event->updateMessage);
     }
 }

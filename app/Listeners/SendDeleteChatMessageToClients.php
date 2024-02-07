@@ -18,6 +18,6 @@ class SendDeleteChatMessageToClients
 
     public function handle(DeleteChatMessage $event)
     {
-        logger($event->deleteMessage);
+        //logger($event->deleteMessage);
     }
 }

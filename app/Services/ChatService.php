@@ -53,7 +53,7 @@ class ChatService
             $memberIds = $users->pluck('id');
             $rooms = ChatRoom::with('category', 'messages','members')
                ->whereHas('members', function ($query) use ($memberIds) {
-                    $query->whereIn('user_id', $memberIds);
+                    $query->whereIn('community_chat_room_memberships.user_id', $memberIds);
                 })
                 ->withCount('messages')
                 ->latest()

@@ -148,7 +148,7 @@ class ChatRoomController extends Controller
                 'message' => 'برای ارسال پیغام باید عضو اتاق باشید.',
             ], 400);
         }
-        try {
+        /*try {
             $response = Http::timeout(1)->get("http://swear_detection:5001/" . $request->message)->json();
             $swearProbability = $response['swear_probability'];
         } catch (\Exception $e) {
@@ -158,7 +158,7 @@ class ChatRoomController extends Controller
         if ($swearProbability > 0.95) {
             \Log::warning('Blocking swear word in: ' . $request->message);
             throw new BadRequestException("قابلیت ارسال پیام وجود ندارد.");
-        }
+        }*/
 
         $lastMessage = ChatMessage::where('room_id', $room->id)->latest()->first();
         if ($request->replyTo) {

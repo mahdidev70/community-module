@@ -297,7 +297,7 @@ class ChatRoomController extends Controller
                     'secondaryText' => $membership->email,
                     'avatarUrl' => $membership->avatar_url,
                 ]),
-                'otherRooms' => $this->getOtherRooms($room->slug),
+                'otherRooms' => $this->getOtherRooms($locale,$room->slug),
                 'description' => $room->description
             ]);
 
@@ -333,7 +333,7 @@ class ChatRoomController extends Controller
                     'secondaryText' => $membership->email,
                     'avatarUrl' => $membership->avatar_url,
                 ]),
-                'otherRooms' => $this->getOtherRooms($room->slug),
+                'otherRooms' => $this->getOtherRooms(null,$room->slug),
                 'description' => $room->description
             ]);
         $categories =  $this->categoryService->getCategoriesForFilter(new ChatRoom());
@@ -367,7 +367,7 @@ class ChatRoomController extends Controller
                     'secondaryText' => $membership->email,
                     'avatarUrl' => $membership->avatar_url,
                 ]),
-                'otherRooms' => $this->getOtherRooms($room->slug),
+                'otherRooms' => $this->getOtherRooms($locale,$room->slug),
                 'description' => $room->description
             ]);
         if($request->filled('search')) {
@@ -393,7 +393,7 @@ class ChatRoomController extends Controller
                     'secondaryText' => $membership->email,
                     'avatarUrl' => $membership->avatar_url,
                 ]),
-                'otherRooms' => $this->getOtherRooms($room->slug),
+                'otherRooms' => $this->getOtherRooms($locale,$room->slug),
                 'description' => $room->description
             ]);
             return response()->json([
@@ -540,7 +540,7 @@ class ChatRoomController extends Controller
                 'secondaryText' => $membership->email,
                 'avatarUrl' => $membership->avatar_url,
             ]),
-            'otherRooms' => $this->getOtherRooms($room->slug),
+            'otherRooms' => $this->getOtherRooms($locale,$room->slug),
             'description' => $room->description
         ];
         EditDescriptionChatroom::dispatch($room->id, $data);

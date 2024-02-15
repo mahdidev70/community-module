@@ -42,7 +42,7 @@ class ChatMessage extends Model
 
     public function current_user_feedback()
     {
-        $user_id = Auth::user()->id;
+        $user_id = auth()->id();
         return $this->reactions()->where('chat_id',$this->id)->where('user_id', $user_id)->pluck('reaction')->first();
     }
 

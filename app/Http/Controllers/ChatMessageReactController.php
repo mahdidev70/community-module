@@ -26,7 +26,7 @@ class ChatMessageReactController extends Controller
         // Get the users in the room
         $usersInRoom = $room->members;
         // Check if a specific user is in the room
-        $userId = Auth::user()->id;
+        $userId = auth()->id();
         $isUserInRoom = $usersInRoom->contains('id', $userId);
         if (!$isUserInRoom){
             return response()->json([

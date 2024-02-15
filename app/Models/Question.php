@@ -67,7 +67,7 @@ class Question extends Model
 
         static::addGlobalScope('publiclyVisible', function (Builder $builder) {
             if (Auth::check()) {
-                $builder->where('asker_user_id', Auth::user()->id)->orWhere('status', 'approved');
+                $builder->where('asker_user_id', auth()->id())->orWhere('status', 'approved');
             } else {
                 $builder->where('status', 'approved');
             }

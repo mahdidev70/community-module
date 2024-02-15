@@ -61,7 +61,7 @@ class QuestionRepository implements QuestionRepositoryInterface
 
     public function createUpdate($data)
     {
-        $user = Auth::user();
+        $user = auth()->user();
 
         $question = Question::updateOrCreate(
             ['id' => $data['id']],

@@ -11,7 +11,7 @@ class ChatService
 {
     public function getSidebar()
     {
-        $rooms = Auth::user()->chatRooms()->latest()->with('category', 'messages')->withCount('messages')->get()
+        $rooms = auth()->user()->chatRooms()->latest()->with('category', 'messages')->withCount('messages')->get()
         ->map(fn($room) => [
             'id' => $room->id,
             'slug' => $room->slug,

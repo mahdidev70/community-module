@@ -53,7 +53,7 @@ class AnswerRepository implements AnswerRepositoryInterface
 
     public function createUpdate($data) 
     {
-        $user = Auth::user();
+        $user = auth()->user();
 
         $answer = Answer::updateOrCreate(
             ['id' => $data['id']],

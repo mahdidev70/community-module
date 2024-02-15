@@ -36,7 +36,7 @@ class AnswerController extends Controller
             ], 400);
         }
         $data = $request->only(Answer::getModel()->fillable);
-        $data['user_id'] = Auth::user()->id;
+        $data['user_id'] = auth()->id();
         $data['question_id']= $slug->id;
         $answer = Answer::create($data);
         if ($request->attachments) {
@@ -74,7 +74,7 @@ class AnswerController extends Controller
                 'message' => 'مجاز به دادن لایک/دیسلایک به این پاسخ نیستید.',
             ], 400);
         }
-        if (Auth::user()->id == $answer->user_id){
+        if (auth()->id() == $answer->user_id){
             return response()->json([
                 'message' => 'مجاز به دادن لایک/دیسلایک به این پاسخ نیستید.',
             ], 400);
@@ -87,7 +87,7 @@ class AnswerController extends Controller
         }
         $currentUserAction = $request->action;
         $functionName = strtolower($request->action).'By';
-        $answer->$functionName(Auth::user()->id);
+        $answer->$functionName(auth()->id());
         return [
             'feedback' => [
                 'likesCount' => $answer->getLikes()->count()??0,

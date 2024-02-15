@@ -13,7 +13,7 @@ class ChatMessageReact extends Model
 
     public function saveReactionByUser($data)
     {
-        $data["user_id"]= Auth::user()->id;
+        $data["user_id"]= auth()->id();
         $data["chat_id"]= $data->chatMessageId;
         if ($react = $this->isReactBy($data)) {
             $react->update($data->all());
@@ -24,7 +24,7 @@ class ChatMessageReact extends Model
 
     public function removeReactionByUser($request)
     {
-        return self::where('user_id', Auth::user()->id)->where('chat_id',$request->chatMessageId)->delete();
+        return self::where('user_id', auth()->id())->where('chat_id',$request->chatMessageId)->delete();
     }
     //if user react remove previous and add new react
     public function totalReactions($chatMessageId)

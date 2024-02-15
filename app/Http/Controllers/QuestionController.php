@@ -116,10 +116,10 @@ class QuestionController extends Controller
 
     public function getHomepageQuestionsData(Request $request) {
         $questions = Question::where('status', 'approved');
-            if (Auth::user()){
+            if (auth()->user()){
                 $questions->orWhere(function ($query) {
                     $query->where('status', 'waiting_for_approval')
-                        ->where('asker_user_id', Auth::user()->id );
+                        ->where('asker_user_id', auth()->id() );
                 });
             }
         $questions->with(['asker', 'category', 'attachments', 'topAnswers'])
@@ -204,7 +204,7 @@ class QuestionController extends Controller
                 'message' => 'مجاز به دادن لایک/دیسلایک به این سوال نیستید.',
             ], 400);
         }
-        if (Auth::user()->id == $question_query->asker_user_id){
+        if (auth()->id() == $question_query->asker_user_id){
             return response()->json([
                 'message' => 'مجاز به دادن لایک/دیسلایک به این سوال نیستید.',
             ], 400);
@@ -212,7 +212,7 @@ class QuestionController extends Controller
         $currentUserAction = $request->action;
             // likeBy() or dislikeBy() or clearBy
          $functionName = strtolower($request->action).'By';
-          $question_query->$functionName(Auth::user()->id);
+          $question_query->$functionName(auth()->id());
           return [
               'feedback' => [
                   'likesCount' => $question_query->getLikes()->count()??0,
@@ -224,7 +224,7 @@ class QuestionController extends Controller
 
     public function newQuestion(CreateQuestionRequest $request) {
         $category = Category::where('slug', $request->categorySlug)->firstOrFail();
-        $user = Auth::user();
+        $user = auth()->user();
 
         $question = new Question();
         $question->slug = $request->slug;
@@ -255,7 +255,7 @@ class QuestionController extends Controller
             "viewsCount" => $question->viewsCount? $question->viewsCount+1 :1
         ]);
         /*return $question->increment('viewsCount');*/
-        if ($question->status != 'approved' &&  Auth::user()->id != $question->asker_user_id){
+        if ($question->status != 'approved' &&  auth()->id() != $question->asker_user_id){
             return response()->json(
                 ['message' => "باید ابتدا سوال تایید گردد."], 400
             );
@@ -279,10 +279,10 @@ class QuestionController extends Controller
             ->toArray();
 
         $userAnswers = [];
-        if (Auth::user()) {
+        if (auth()->user()) {
             $userAnswers = $question->allAnswers()
                 ->where(function ($query) {
-                    $query->where('user_id', Auth::user()->id)->where('status', 'waiting_for_approval');
+                    $query->where('user_id', auth()->id())->where('status', 'waiting_for_approval');
                     })
                 ->with('user')
                 ->latest('created_at')
@@ -385,7 +385,7 @@ class QuestionController extends Controller
 
     public function getUserQuestion(Request $request)
     {
-        $user = Auth::user();
+        $user = auth()->user();
 
         if ($request['data'] == 'my') {
 

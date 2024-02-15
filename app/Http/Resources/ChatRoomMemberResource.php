@@ -15,7 +15,7 @@ class ChatRoomMemberResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
+            'id' => $this->user_id,
             'displayName' => $this->getDisplayName(), 
             'avatarUrl' => $this->avatar_url,
         ];

@@ -25,7 +25,7 @@ class QuestionResource extends JsonResource
                 'slug' => $this->category->slug ?? '',
             ],
             'author' => [
-                'id' => $this->asker->id,
+                'id' => $this->asker->user_id,
                 'displayName' => $this->asker->getDisplayName(),
                 'avatarUrl' => $this->asker->avatar_url,
             ],

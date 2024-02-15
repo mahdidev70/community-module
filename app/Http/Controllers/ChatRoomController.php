@@ -94,7 +94,7 @@ class ChatRoomController extends Controller
             'replyTo' => $a->reply_to_object ? [
                 'id' => $a->reply_to_object->id,
                 'userDisplayName' => $a->reply_to_object->user->getDisplayName(),
-                'userId' => $a->reply_to_object->user->id,
+                'userId' => $a->reply_to_object->user->user_id,
                 'message' => $a->reply_to_object->message,
             ] : null,
             'reactions' => [
@@ -133,7 +133,7 @@ class ChatRoomController extends Controller
                 'title' => $room->category->title,
             ],
             'previewedMembers' => $room->previewMembers->take(5)->map( fn ($userProfile) => [
-                'id' => $userProfile->id,
+                'id' => $userProfile->user_id,
                 'displayName' => $userProfile->getDisplayName(),
                 'avatarUrl' => $userProfile->avatar_url,
             ])
@@ -205,7 +205,7 @@ class ChatRoomController extends Controller
         $category_id = Category::where('slug', $category_slug)->where('status','active')->firstOrFail()->id;
         $room = ChatRoom::where('category_id', $category_id)->where('slug', $chat_slug)->where('status','active')->firstOrFail();
         $response = $room->members()->paginate(10)->through( fn ($member) => [
-            'id' => $member->id,
+            'id' => $member->user_id,
             'avatarUrl' => $member->avatar_url,
             'displayName' => $member->getDisplayName(),
             'secondaryText' => $member->email,
@@ -292,7 +292,7 @@ class ChatRoomController extends Controller
                 'avatarUrl' => $room->avatar_url,
                 'bannerUrl' => $room->banner_url,
                 'membersListSummary' => $room->previewMembers->take(5)->map( fn($membership) => [
-                    'id' => $membership->id,
+                    'id' => $membership->user_id,
                     'displayName' => $membership->getDisplayName(),
                     'secondaryText' => $membership->email,
                     'avatarUrl' => $membership->avatar_url,
@@ -362,7 +362,7 @@ class ChatRoomController extends Controller
                 'avatarUrl' => $room->avatar_url,
                 'bannerUrl' => $room->banner_url,
                 'membersListSummary' => $room->previewMembers->take(5)->map( fn($membership) => [
-                    'id' => $membership->id,
+                    'id' => $membership->user_id,
                     'displayName' => $membership->getDisplayName(),
                     'secondaryText' => $membership->email,
                     'avatarUrl' => $membership->avatar_url,
@@ -374,7 +374,7 @@ class ChatRoomController extends Controller
             $txt = $request->query->get('search');
             //toye title
             $rooms = $query->where(function ($q) use ($txt) {
-                $q->where('title', 'like', '%' . $txt)->orWhere('title', 'like', '% ' . $txt . '%')->orWhere('title', 'like', $txt . '%');
+                $q->where('title', 'like', '%' . $txt .'%');
             })->get()->map(fn ($room) => [
                 'roomId' => $room->id,
                 'slug' => $room->slug,
@@ -388,7 +388,7 @@ class ChatRoomController extends Controller
                 'avatarUrl' => $room->avatar_url,
                 'bannerUrl' => $room->banner_url,
                 'membersListSummary' => $room->previewMembers->take(5)->map( fn($membership) => [
-                    'id' => $membership->id,
+                    'id' => $membership->user_id,
                     'displayName' => $membership->getDisplayName(),
                     'secondaryText' => $membership->email,
                     'avatarUrl' => $membership->avatar_url,
@@ -455,7 +455,7 @@ class ChatRoomController extends Controller
         $memberCount =  $chat_slug->members()->count();
 
         AddChatroomMember::dispatch($chat_slug->id,[
-            'id' => $member->id,
+            'id' => $member->user_id,
             "displayName" => $member->getDisplayName(),
             'avatarUrl' => $member->avatar_url,
         ],  $memberCount);
@@ -474,7 +474,7 @@ class ChatRoomController extends Controller
                 'memberCount' => $memberCount
             ],
             'member' => [
-                'id' => $member->id,
+                'id' => $member->user_id,
                 'displayName' => $member->getDisplayName(),
                 'avatarUrl' => $member->avatar_url,
             ],
@@ -488,8 +488,8 @@ class ChatRoomController extends Controller
                 'message' => 'برای تغییر در اتاق باید عضو اتاق باشید.',
             ], 400);
         }*/
-        $member = UserProfile::find($request->memberId);
-        $chat_slug->members()->detach($member->id);
+        $member = UserProfile::where('user_id',$request->memberId)->firstOrFail();
+        $chat_slug->members()->detach($member->user_id);
         $memberCount =  $chat_slug->members()->count();
         RemoveChatroomMember::dispatch($chat_slug->id,[
             "id" => $member->id,
@@ -535,7 +535,7 @@ class ChatRoomController extends Controller
             'avatarUrl' => $room->avatar_url,
             'bannerUrl' => $room->banner_url,
             'membersListSummary' => $room->previewMembers->take(5)->map( fn($membership) => [
-                'id' => $membership->id,
+                'id' => $membership->user_id,
                 'displayName' => $membership->getDisplayName(),
                 'secondaryText' => $membership->email,
                 'avatarUrl' => $membership->avatar_url,
@@ -613,7 +613,7 @@ class ChatRoomController extends Controller
         $categories =  $this->categoryService->getCategoriesForFilter(new ChatRoom());
         $users = UserProfile::where('status','active')->get()
                 ->map(fn($user)=>[
-                    'id' => $user->id,
+                    'id' => $user->user_id,
                     'displayName' => $user->getDisplayName(),
                     'avatarUrl' => $user->avatar_url,
                 ]);

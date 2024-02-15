@@ -22,7 +22,7 @@ class AnswerResource extends JsonResource
                 'slug' =>$this->question->slug,
             ],
             'author' => [
-                'id' => $this->user->id, 
+                'id' => $this->user->user_id, 
                 'displayName' => $this->user->getDisplayName(), 
                 'avatarUrl' => $this->user->avatar_url, 
             ],

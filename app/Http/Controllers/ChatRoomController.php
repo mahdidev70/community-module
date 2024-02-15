@@ -71,7 +71,7 @@ class ChatRoomController extends Controller
         ];
     }
 
-    public function getSingleChatPageMessages($locale, $category_slug, $chat_slug)
+    public function getSingleCzhatPageMessages($locale, $category_slug, $chat_slug)
     {
         $user = auth()->user();
         $category_id = Category::where('slug', $category_slug)->where('status','active')->firstOrFail()->id;
@@ -189,7 +189,7 @@ class ChatRoomController extends Controller
             'replyTo' => $request->replyTo ? [
                 'id' => $reply_to_object->id,
                 'userDisplayName' => $reply_to_object->user->getDisplayName(),
-                'userId' => $reply_to_object->user->id,
+                'userId' => $reply_to_object->user->user_id,
                 'message' => $reply_to_object->message,
             ] : null,
             'reactions' => $message->reactionsCountByMsg(),

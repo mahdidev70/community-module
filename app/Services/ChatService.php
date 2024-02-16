@@ -50,7 +50,7 @@ class ChatService
     }
     public function recentChatsSidebar($room,$loginUser) {
         $users = $room->members()->where('community_chat_room_memberships.user_id', '!=', $loginUser)->get();
-            $memberIds = $users->pluck('id');
+            $memberIds = $users->pluck('user_id');
             $rooms = ChatRoom::with('category', 'messages','members')
                ->whereHas('members', function ($query) use ($memberIds) {
                     $query->whereIn('community_chat_room_memberships.user_id', $memberIds);

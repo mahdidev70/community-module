@@ -29,4 +29,9 @@ class NewChatMessage implements ShouldBroadcast
     {
         return new Channel('chat.' . $this->roomId);
     }
+
+    public function broadcastAs(): string
+    {
+        return 'App\Events\NewChatMessage';
+    }
 }

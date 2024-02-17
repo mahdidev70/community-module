@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('community_chat_rooms', function (Blueprint $table) {
-            $table->boolean('most_populer')->after('is_private')->default(0);
+            $table->boolean('most_popular')->after('is_private')->default(0);
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('community_chat_rooms', function (Blueprint $table) {
-            $table->dropColumn('most_populer');
+            $table->dropColumn('most_popular');
         });
     }
 };

@@ -34,6 +34,7 @@ class ChatRoomResource extends JsonResource
                 'slug' => $this->category->slug ?? null,
             ],
             'members' => ChatRoomMemberResource::collection($this->members),
+            'mostPopular' => $this->most_popular,
         ];
     }
 }

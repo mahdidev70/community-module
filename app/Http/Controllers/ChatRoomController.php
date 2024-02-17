@@ -637,6 +637,7 @@ class ChatRoomController extends Controller
                 'banner_url' => $request['bannerUrl'],
                 'avatar_url' => $request['avatarUrl'],
                 'description' => $request['description'],
+                'most_popular' => $request['mostPopular'],
             ]
         );
 

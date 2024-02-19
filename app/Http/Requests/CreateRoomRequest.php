@@ -30,7 +30,7 @@ class CreateRoomRequest extends FormRequest
             'slug' => ['string'],
             'categoryId' => ['required'],
             'file' => ['nullable','max:2048','mimes:jpeg,png,jpg,gif,webp'],
-            'members.*' => ['nullable','exists:core_user_profiles,id',]
+            'members.*' => ['nullable','exists:core_user_profiles,user_id',]
         ];
     }
 }

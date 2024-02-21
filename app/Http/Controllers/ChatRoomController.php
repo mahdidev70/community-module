@@ -625,6 +625,10 @@ class ChatRoomController extends Controller
 
     public function createUpdateChatRoomsPannel(CreateRoomRequest $request)
     {
+        if (!isset($request['mostPopular'])) {
+            $request['mostPopular'] = 0;
+        }
+
         $room = ChatRoom::updateOrCreate(
             ['id' => $request['id']],
             [
@@ -637,13 +641,14 @@ class ChatRoomController extends Controller
                 'banner_url' => $request['bannerUrl'],
                 'avatar_url' => $request['avatarUrl'],
                 'description' => $request['description'],
-                'most_popular' => $request['mostPopular'],
+                'most_popular' => $request['mostPopular']
             ]
         );
 
         if ($request->filled('members')) {
             $room->members()->sync($request->members);
         }
+        
         return $room->id;
     }
 

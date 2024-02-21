@@ -177,7 +177,7 @@ class ChatRoomController extends Controller
 
         $this->chatService->incrementUnreadCount($user->id,$room->id);
        // return ["ss"=>$user->id,"dd"=>$room->id];
-        NewChatMessage::dispatch($room->id, $lastMessage->id, [
+        NewChatMessage::dispatch($room->id, $lastMessage->id ?? 0, [
             'id' => $message->id,
             'userId' => $user->id,
             'userDisplayName' => $user->getDisplayName(),

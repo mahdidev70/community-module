@@ -717,7 +717,7 @@ class ChatRoomController extends Controller
 
     public function generateJoinLink($locale,ChatRoom $room)
     {
-        $url = route('join.chatroom', ['slug' => $room->slug]);
+        $url = url($locale.'/api/community/chat/join/' . $room->slug);
         return response()->json([
             "joinLink"=> $url,
             'message' => 'لینک جوین به اتاق باموفقیت تولید شد.'

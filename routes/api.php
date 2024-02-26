@@ -97,6 +97,7 @@ Route::middleware("auth:sanctum")->group(function () {
             Route::post('update/{room}', [ChatRoomController::class, 'updateChat'])->can('community'); // Done
             Route::delete('{slug}', [ChatRoomController::class, 'deleteRoom'])->can('community'); // Done
 
+            Route::post('generate/join-link/{room}', [ChatRoomController::class, 'generateJoinLink'])->can('community'); // Done
         });
     });
 });

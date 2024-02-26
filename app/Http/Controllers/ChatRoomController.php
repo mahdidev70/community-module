@@ -648,7 +648,7 @@ class ChatRoomController extends Controller
         if ($request->filled('members')) {
             $room->members()->sync($request->members);
         }
-        
+
         return $room->id;
     }
 
@@ -713,5 +713,14 @@ class ChatRoomController extends Controller
             return false;
         }
         return true;
+    }
+
+    public function generateJoinLink($locale,ChatRoom $room)
+    {
+        $url = route('join.chatroom', ['slug' => $room->slug]);
+        return response()->json([
+            "joinLink"=> $url,
+            'message' => 'لینک جوین به اتاق باموفقیت تولید شد.'
+        ],200);
     }
 }

@@ -456,7 +456,7 @@ class ChatRoomController extends Controller
                 'message' => 'درخواست شما برای وارد شدن به اتاق رد شده است.'
             ],200);
         }
-        if ($joinRequest && $joinRequest->status == 'active'){
+        if ($joinRequest && $joinRequest->status == 'accept'){
             return response()->json([
                 'message' => 'شما وارد اتاق شده اید.'
             ],200);
@@ -477,7 +477,7 @@ class ChatRoomController extends Controller
                 'message' => 'امکان عضویت در اتاق وجود ندارد.',
             ], 404);
         }
-        $chat_slug->members()->attach($member->id);
+        $chat_slug->members()->attach($member->user_id);
         $memberCount =  $chat_slug->members()->count();
 
         AddChatroomMember::dispatch($chat_slug->id,[

@@ -61,4 +61,14 @@ class JoinRepository implements JoinRepositoryInterface
         }
         return $joinQuery->orderBy($sortKey, $sortOrder)->paginate(10);
     }
+
+    public function editStatus($request)
+    {
+        return Join::whereIn('id', $request['ids'])->update(['status' => $request['status']]);
+    }
+
+    public function findById($id)
+    {
+        return Join::where('id',$id)->first();
+    }
 }

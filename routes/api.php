@@ -101,6 +101,7 @@ Route::middleware("auth:sanctum")->group(function () {
             Route::post('generate/join-link/{room}', [JoinController::class, 'generateJoinLink'])->can('community'); // Done
             Route::get('join/list/common', [JoinController::class, 'commonData'])->can('community'); // Done
             Route::get('join/list/data', [JoinController::class, 'listData'])->can('community'); // Done
+            Route::put('join/set-status', [JoinController::class, 'updateStatus']);
         });
     });
 });

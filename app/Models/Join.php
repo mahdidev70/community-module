@@ -20,4 +20,8 @@ class Join extends Model
         return $this->belongsTo(UserProfile::class, 'user_id','user_id');
     }
 
+    public function room() {
+        return $this->belongsTo(ChatRoom::class);
+    }
+
 }

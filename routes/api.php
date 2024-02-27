@@ -7,6 +7,7 @@ use TechStudio\Community\app\Http\Controllers\AnswerController;
 use TechStudio\Community\app\Http\Controllers\ChatMessageReactController;
 use TechStudio\Community\app\Http\Controllers\ChatRoomController;
 use TechStudio\Community\app\Http\Controllers\CommunityHomePageController;
+use TechStudio\Community\app\Http\Controllers\JoinController;
 use TechStudio\Community\app\Http\Controllers\QuestionController;
 use TechStudio\Community\app\Http\Controllers\SearchController;
 
@@ -97,7 +98,9 @@ Route::middleware("auth:sanctum")->group(function () {
             Route::post('update/{room}', [ChatRoomController::class, 'updateChat'])->can('community'); // Done
             Route::delete('{slug}', [ChatRoomController::class, 'deleteRoom'])->can('community'); // Done
 
-            Route::post('generate/join-link/{room}', [ChatRoomController::class, 'generateJoinLink'])->can('community'); // Done
+            Route::post('generate/join-link/{room}', [JoinController::class, 'generateJoinLink'])->can('community'); // Done
+            Route::get('join/list/common', [JoinController::class, 'commonData'])->can('community'); // Done
+            Route::get('join/list/data', [JoinController::class, 'listData'])->can('community'); // Done
         });
     });
 });

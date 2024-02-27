@@ -26,6 +26,7 @@ use TechStudio\Community\app\Http\Resources\ChatRoomsResource;
 use TechStudio\Community\app\Models\ChatMessage;
 use TechStudio\Community\app\Models\ChatRoom;
 use TechStudio\Community\app\Models\ChatRoomMembership;
+use TechStudio\Community\app\Repositories\Interfaces\ChatroomRepositoryInterface;
 use TechStudio\Community\app\Services\ChatService;
 use TechStudio\Core\app\Helper\SlugGenerator;
 use TechStudio\Core\app\Models\Category;
@@ -35,7 +36,9 @@ use TechStudio\Core\app\Services\File\FileService;
 
 class ChatRoomController extends Controller
 {
-    public function __construct(protected FileService $fileService, protected ChatService $chatService,protected CategoryService $categoryService)
+    public function __construct(protected FileService $fileService, protected ChatService $chatService,
+                                protected CategoryService $categoryService,
+                                protected ChatroomRepositoryInterface $chatroomRepository)
     {}
 
     public function getSingleChatPageCommonData($locale, $category_slug, $chat_slug)
@@ -440,7 +443,20 @@ class ChatRoomController extends Controller
 
     public function join($locale, Request $request)
     {
-        return ChatRoom::where('slug',$request->chat_slug)->with('previewMembers')->withCount('members')->firstOrFail();
+        $user = auth()->user();
+        $room = ChatRoom::where('slug',$request->chat_slug)->firstOrFail();
+        $joinRequest = $this->chatroomRepository->findByUserRoom($user->id ,$room->id);
+        if ($joinRequest && $joinRequest->status == 'waiting_for_approval'){
+            return response()->json([
+                'message' => 'باتشکر از شکیبایی شما. بعد از تایید ادمین وارد اتاق میشوید.'
+            ],200);
+        }
+        $link = url($locale.'/api/community/chat/join/' . $room->slug);
+        $this->chatroomRepository->joinViaLink($user->id ,$room->id,$link);
+
+        return response()->json([
+            'message' => 'بعداز تایید ادمین وارد اتاق " '.$room->title.'" میشوید.'
+        ],201);
     }
 
     public function addMember($locale, ChatRoom $chat_slug, AddRemoveMemberRequest $request)

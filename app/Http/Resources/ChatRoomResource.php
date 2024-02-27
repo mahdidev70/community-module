@@ -26,7 +26,7 @@ class ChatRoomResource extends JsonResource
             'creationDate' => $this->created_at,
             'maxMember' => $this-> max_member,
             'memberCount' => $this->members->count(),
-            'joinLink' => route('join.chatroom').'/'.$this->slug,
+            'joinLink' => $this->join_link /*route('join.chatroom').'/'.$this->slug*/,
             'categoryId' => $this->category->id ?? null,
             'category' => [
                 'id' => $this->category->id ?? null,

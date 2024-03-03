@@ -63,6 +63,7 @@ class ChatRoomController extends Controller
             'membersCount' => $room->members_count,
             'avatarUrl' => $room->avatar_url,
             'bannerUrl' => $room->banner_url,
+            'joinLink' => $room->join_link,
             'membersListSummary' => $room->previewMembers->take(5)->map( fn($membership) => [
                 'id' => $membership->user_id,
                 'displayName' => $membership->getDisplayName(),

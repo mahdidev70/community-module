@@ -31,6 +31,7 @@ class AnswerResource extends JsonResource
             'creationDate' => $this->created_at,
             'likesCount' => $this->likes_count ?? 0,
             'dislikesCount' => $this->dislikes_count ?? 0,
+            'aText' => $this->text,
         ];
     }
 }

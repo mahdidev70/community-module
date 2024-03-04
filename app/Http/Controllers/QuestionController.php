@@ -357,7 +357,7 @@ class QuestionController extends Controller
         });
 
         $status = [
-            'approved', 'hidden', 'waiting_for_approval'
+            'approved', 'hidden', 'waiting_for_approval', 'deleted',
         ];
 
         return [

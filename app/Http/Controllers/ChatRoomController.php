@@ -36,23 +36,26 @@ use TechStudio\Core\app\Services\File\FileService;
 
 class ChatRoomController extends Controller
 {
-    public function __construct(protected FileService $fileService, protected ChatService $chatService,
-                                protected CategoryService $categoryService,
-                                protected JoinRepositoryInterface $joinRepository)
-    {}
+    public function __construct(
+        protected FileService $fileService,
+        protected ChatService $chatService,
+        protected CategoryService $categoryService,
+        protected JoinRepositoryInterface $joinRepository
+    ) {
+    }
 
     public function getSingleChatPageCommonData($locale, $category_slug, $chat_slug)
     {
-        $category_id = Category::where('slug', $category_slug)->where('status','active')->firstOrFail()->id;
+        $category_id = Category::where('slug', $category_slug)->where('status', 'active')->firstOrFail()->id;
 
         $room = ChatRoom::where('category_id', $category_id)
-            ->where('status','active')
+            ->where('status', 'active')
             ->where('slug', $chat_slug)
             ->with(['previewMembers', 'category'])
             ->withCount('members')
             ->firstOrFail();
         $allow = false;
-        if(Auth('sanctum')->user()){
+        if (Auth('sanctum')->user()) {
             $user = Auth('sanctum')->user();
             $allow = $room->members()->where('core_user_profiles.user_id', $user->id)->exists();
         }
@@ -69,71 +72,124 @@ class ChatRoomController extends Controller
             'avatarUrl' => $room->avatar_url,
             'bannerUrl' => $room->banner_url,
             'joinLink' => $room->join_link,
-            'membersListSummary' => $room->previewMembers->take(5)->map( fn($membership) => [
+            'membersListSummary' => $room->previewMembers->take(5)->map(fn ($membership) => [
                 'id' => $membership->user_id,
                 'displayName' => $membership->getDisplayName(),
                 'secondaryText' => $membership->email,
                 'avatarUrl' => $membership->avatar_url,
             ]),
-            'otherRooms' => $this->getOtherRooms($locale,$chat_slug),
+            'otherRooms' => $this->getOtherRooms($locale, $chat_slug),
             'description' => $room->description,
-            "loginUserAllowToChat" =>$allow
+            "loginUserAllowToChat" => $allow
         ];
     }
 
-    public function getPreviewSingleChatPageMessages(){
-        
-        return 'sdf';
+    public function getPreviewSingleChatPageMessages()
+    {
+        $data = [
+            '0' => [
+                'id' => 55,
+                'userId' => 44,
+                'userDisplayName' => 'کاربر جدید',
+                'stars' => null,
+                'avatarUrl' => 'https://storage.sa-test.techstudio.diginext.ir/community-files/65e4a20586d69.png',
+                'doubleChecks' => 0,
+                'date' => '2024-03-03T09:44:38.000000Z',
+                'message' => 'راهکارتون برای فروش بیشتر چیه؟',
+                'replyTo' => null,
+                'reactions' => [
+                    "totalReactions" => [],
+                    "currentUserReaction" => []
+                ],
+                'attachments' => []
+            ],
+            '1' => [
+                'id' => 55,
+                'userId' => 44,
+                'userDisplayName' => 'کاربر جدید',
+                'stars' => null,
+                'avatarUrl' => 'https://storage.sa-test.techstudio.diginext.ir/community-files/65e4a20586d69.png',
+                'doubleChecks' => 0,
+                'date' => '2024-03-03T09:44:38.000000Z',
+                'message' => 'راهکارتون برای فروش بیشتر چیه؟',
+                'replyTo' => null,
+                'reactions' => [
+                    "totalReactions" => [],
+                    "currentUserReaction" => []
+                ],
+                'attachments' => []
+            ],
+            '2' => [
+                'id' => 55,
+                'userId' => 44,
+                'userDisplayName' => 'کاربر جدید',
+                'stars' => null,
+                'avatarUrl' => 'https://storage.sa-test.techstudio.diginext.ir/community-files/65e4a20586d69.png',
+                'doubleChecks' => 0,
+                'date' => '2024-03-03T09:44:38.000000Z',
+                'message' => 'راهکارتون برای فروش بیشتر چیه؟',
+                'replyTo' => null,
+                'reactions' => [
+                    "totalReactions" => [],
+                    "currentUserReaction" => []
+                ],
+                'attachments' => []
+            ]
+        ];
+        return [
+            "loginUserAllowToChat" => false,
+            "data" => $data
+        ];
     }
 
     public function getSingleChatPageMessages($locale, $category_slug, $chat_slug)
     {
         $user = auth()->user();
-        $category_id = Category::where('slug', $category_slug)->where('status','active')->firstOrFail()->id;
-        $room = ChatRoom::where('category_id', $category_id)->where('slug', $chat_slug)->where('status','active')->firstOrFail();
-        $this->chatService->decrementUnreadCount($user->id,$room->id);
+        $category_id = Category::where('slug', $category_slug)->where('status', 'active')->firstOrFail()->id;
+        $room = ChatRoom::where('category_id', $category_id)->where('slug', $chat_slug)->where('status', 'active')->firstOrFail();
+        $this->chatService->decrementUnreadCount($user->id, $room->id);
         $allow = $room->members()->where('core_user_profiles.user_id', $user->id)->exists();
         $page = $room->messages()->latest()->with('user', 'reply_to_object', 'attachments')->paginate();
         UnreadCountMember::dispatch($room->id, $user->id);
-        $page->through(function($a){
+        $page->through(function ($a) {
 
-        return [
-            'id' => $a->id,
-            'userId' => $a->user_id,
-            'userDisplayName' => $a->user->getDisplayName(),
-            'stars' => null,
-            'avatarUrl' => $a->user->avatar_url,
-            'doubleChecks' => $a->is_seen,
-            'date' => $a->created_at,
-            'message' => $a->message,
-            'replyTo' => $a->reply_to_object ? [
-                'id' => $a->reply_to_object->id,
-                'userDisplayName' => $a->reply_to_object->user->getDisplayName(),
-                'userId' => $a->reply_to_object->user->user_id,
-                'message' => $a->reply_to_object->message,
-            ] : null,
-            'reactions' => [
-                "totalReactions" => $a->reactionsCountByMsg(),
-                "currentUserReaction" => $a->current_user_feedback()
+            return [
+                'id' => $a->id,
+                'userId' => $a->user_id,
+                'userDisplayName' => $a->user->getDisplayName(),
+                'stars' => null,
+                'avatarUrl' => $a->user->avatar_url,
+                'doubleChecks' => $a->is_seen,
+                'date' => $a->created_at,
+                'message' => $a->message,
+                'replyTo' => $a->reply_to_object ? [
+                    'id' => $a->reply_to_object->id,
+                    'userDisplayName' => $a->reply_to_object->user->getDisplayName(),
+                    'userId' => $a->reply_to_object->user->user_id,
+                    'message' => $a->reply_to_object->message,
+                ] : null,
+                'reactions' => [
+                    "totalReactions" => $a->reactionsCountByMsg(),
+                    "currentUserReaction" => $a->current_user_feedback()
                 ],
-            'attachments' => $a->attachments->map(fn ($file) => [
-                'id' => $file->id,
-                'type' => 'image',  // TODO: infer
-                'previewImageUrl' => $file->file_url,
-                'contentUrl' => $file->file_url,
-            ])
-        ];
+                'attachments' => $a->attachments->map(fn ($file) => [
+                    'id' => $file->id,
+                    'type' => 'image',  // TODO: infer
+                    'previewImageUrl' => $file->file_url,
+                    'contentUrl' => $file->file_url,
+                ])
+            ];
         });
 
         return [
-            "loginUserAllowToChat" =>$allow,
+            "loginUserAllowToChat" => $allow,
             "data" => $page
         ];
     }
 
     private function getOtherRooms($locale, $chatRoomSlug)
     {
-        $otherRooms = ChatRoom::where('slug','<>',$chatRoomSlug)->with('previewMembers','category')->withCount('members')->take(5)->get();
+        $otherRooms = ChatRoom::where('slug', '<>', $chatRoomSlug)->with('previewMembers', 'category')->withCount('members')->take(5)->get();
 
         return $otherRooms->map(fn ($room) => [
             'roomId' => $room->id,
@@ -142,12 +198,12 @@ class ChatRoomController extends Controller
             'isPrivate' => $room->is_private,
             'avatarUrl' => $room->avatar_url,
             'slug' => $room->slug,
-            'description' => $room->description??'',
+            'description' => $room->description ?? '',
             'category' => [
                 'slug' => $room->category->slug,
                 'title' => $room->category->title,
             ],
-            'previewedMembers' => $room->previewMembers->take(5)->map( fn ($userProfile) => [
+            'previewedMembers' => $room->previewMembers->take(5)->map(fn ($userProfile) => [
                 'id' => $userProfile->user_id,
                 'displayName' => $userProfile->getDisplayName(),
                 'avatarUrl' => $userProfile->avatar_url,
@@ -155,10 +211,10 @@ class ChatRoomController extends Controller
         ]);
     }
 
-    public function postChatMessage($locale, Category $category_slug,ChatRoom $room, Request $request)
+    public function postChatMessage($locale, Category $category_slug, ChatRoom $room, Request $request)
     {
         $swearProbability = null;
-        if($this->userCanChangeRoomInfo($locale, $room) == false){
+        if ($this->userCanChangeRoomInfo($locale, $room) == false) {
             return response()->json([
                 'message' => 'برای ارسال پیغام باید عضو اتاق باشید.',
             ], 400);
@@ -190,8 +246,8 @@ class ChatRoomController extends Controller
             $message->file_attachments = $message->associateAttachments($request->attachments);
         }
 
-        $this->chatService->incrementUnreadCount($user->id,$room->id);
-       // return ["ss"=>$user->id,"dd"=>$room->id];
+        $this->chatService->incrementUnreadCount($user->id, $room->id);
+        // return ["ss"=>$user->id,"dd"=>$room->id];
         NewChatMessage::dispatch($room->id, $lastMessage->id ?? 0, [
             'id' => $message->id,
             'userId' => $user->id,
@@ -211,15 +267,15 @@ class ChatRoomController extends Controller
             'attachments' => $message->file_attachments
         ]);
         # event update sidebar chat
-        $this->chatService->recentChatsSidebar($room,$user->id);
+        $this->chatService->recentChatsSidebar($room, $user->id);
         return response(['id' => $message->id], 201);
     }
 
     public function getChatRoomMembers($locale, $category_slug, $chat_slug)
     {
-        $category_id = Category::where('slug', $category_slug)->where('status','active')->firstOrFail()->id;
-        $room = ChatRoom::where('category_id', $category_id)->where('slug', $chat_slug)->where('status','active')->firstOrFail();
-        $response = $room->members()->paginate(10)->through( fn ($member) => [
+        $category_id = Category::where('slug', $category_slug)->where('status', 'active')->firstOrFail()->id;
+        $room = ChatRoom::where('category_id', $category_id)->where('slug', $chat_slug)->where('status', 'active')->firstOrFail();
+        $response = $room->members()->paginate(10)->through(fn ($member) => [
             'id' => $member->user_id,
             'avatarUrl' => $member->avatar_url,
             'displayName' => $member->getDisplayName(),
@@ -234,7 +290,7 @@ class ChatRoomController extends Controller
             $request,
             max_count: 3,
             max_size_mb: 10,
-            types: ['jpg', 'jpeg', 'png','webp'],
+            types: ['jpg', 'jpeg', 'png', 'webp'],
             format_result_as_attachment: true,
             storage_key: 'community',
         );
@@ -289,32 +345,32 @@ class ChatRoomController extends Controller
                 });
             }
             $rooms = $query;
-        }else{
+        } else {
             $rooms = $query->inRandomOrder();
         }
         $rooms =  $rooms->withCount('members')
             ->paginate(12);
         $data = $rooms->map(fn ($room) => [
-                'roomId' => $room->id,
-                'slug' => $room->slug,
-                'title' => $room->title,
-                'category' => [
-                    'slug' => $room->category->slug,
-                    'title' => $room->category->title,
-                ],
-                'is_private' => $room->is_private,
-                'membersCount' => $room->members_count,
-                'avatarUrl' => $room->avatar_url,
-                'bannerUrl' => $room->banner_url,
-                'membersListSummary' => $room->previewMembers->take(5)->map( fn($membership) => [
-                    'id' => $membership->user_id,
-                    'displayName' => $membership->getDisplayName(),
-                    'secondaryText' => $membership->email,
-                    'avatarUrl' => $membership->avatar_url,
-                ]),
-                'otherRooms' => $this->getOtherRooms($locale,$room->slug),
-                'description' => $room->description
-            ]);
+            'roomId' => $room->id,
+            'slug' => $room->slug,
+            'title' => $room->title,
+            'category' => [
+                'slug' => $room->category->slug,
+                'title' => $room->category->title,
+            ],
+            'is_private' => $room->is_private,
+            'membersCount' => $room->members_count,
+            'avatarUrl' => $room->avatar_url,
+            'bannerUrl' => $room->banner_url,
+            'membersListSummary' => $room->previewMembers->take(5)->map(fn ($membership) => [
+                'id' => $membership->user_id,
+                'displayName' => $membership->getDisplayName(),
+                'secondaryText' => $membership->email,
+                'avatarUrl' => $membership->avatar_url,
+            ]),
+            'otherRooms' => $this->getOtherRooms($locale, $room->slug),
+            'description' => $room->description
+        ]);
 
         return response()->json([
             'data' => $data,
@@ -342,13 +398,13 @@ class ChatRoomController extends Controller
                 'membersCount' => $room->members_count,
                 'avatarUrl' => $room->avatar_url,
                 'bannerUrl' => $room->banner_url,
-                'membersListSummary' => $room->previewMembers->take(5)->map( fn($membership) => [
+                'membersListSummary' => $room->previewMembers->take(5)->map(fn ($membership) => [
                     'id' => $membership->id,
                     'displayName' => $membership->getDisplayName(),
                     'secondaryText' => $membership->email,
                     'avatarUrl' => $membership->avatar_url,
                 ]),
-                'otherRooms' => $this->getOtherRooms(null,$room->slug),
+                'otherRooms' => $this->getOtherRooms(null, $room->slug),
                 'description' => $room->description
             ]);
         $categories =  $this->categoryService->getCategoriesForFilter(new ChatRoom());
@@ -376,20 +432,20 @@ class ChatRoomController extends Controller
                 'membersCount' => $room->members_count,
                 'avatarUrl' => $room->avatar_url,
                 'bannerUrl' => $room->banner_url,
-                'membersListSummary' => $room->previewMembers->take(5)->map( fn($membership) => [
+                'membersListSummary' => $room->previewMembers->take(5)->map(fn ($membership) => [
                     'id' => $membership->user_id,
                     'displayName' => $membership->getDisplayName(),
                     'secondaryText' => $membership->email,
                     'avatarUrl' => $membership->avatar_url,
                 ]),
-                'otherRooms' => $this->getOtherRooms($locale,$room->slug),
+                'otherRooms' => $this->getOtherRooms($locale, $room->slug),
                 'description' => $room->description
             ]);
-        if($request->filled('search')) {
+        if ($request->filled('search')) {
             $txt = $request->query->get('search');
             //toye title
             $rooms = $query->where(function ($q) use ($txt) {
-                $q->where('title', 'like', '%' . $txt .'%');
+                $q->where('title', 'like', '%' . $txt . '%');
             })->get()->map(fn ($room) => [
                 'roomId' => $room->id,
                 'slug' => $room->slug,
@@ -402,13 +458,13 @@ class ChatRoomController extends Controller
                 'membersCount' => $room->members_count,
                 'avatarUrl' => $room->avatar_url,
                 'bannerUrl' => $room->banner_url,
-                'membersListSummary' => $room->previewMembers->take(5)->map( fn($membership) => [
+                'membersListSummary' => $room->previewMembers->take(5)->map(fn ($membership) => [
                     'id' => $membership->user_id,
                     'displayName' => $membership->getDisplayName(),
                     'secondaryText' => $membership->email,
                     'avatarUrl' => $membership->avatar_url,
                 ]),
-                'otherRooms' => $this->getOtherRooms($locale,$room->slug),
+                'otherRooms' => $this->getOtherRooms($locale, $room->slug),
                 'description' => $room->description
             ]);
             return response()->json([
@@ -435,7 +491,7 @@ class ChatRoomController extends Controller
             storage_key: 'community',
         );
         $chat_slug->update(['banner_url' => $fileUrl['url']]);
-        CoverChatRoom::dispatch( $chat_slug->id,[
+        CoverChatRoom::dispatch($chat_slug->id, [
             "roomId" => $chat_slug->id,
             "title" => $chat_slug->title,
             "slug" => $chat_slug->slug,
@@ -450,41 +506,41 @@ class ChatRoomController extends Controller
             "bannerUrl" => $chat_slug->banner_url,
             "isPrivate" => $chat_slug->is_private,
             "status" => $chat_slug->status,
-            ]);
+        ]);
     }
 
     public function join($locale, Request $request)
     {
         $user = auth()->user();
-        $room = ChatRoom::where('slug',$request->chat_slug)->firstOrFail();
-        $joinRequest = $this->joinRepository->findByUserRoom($user->id ,$room->id);
-        if ($joinRequest && $joinRequest->status == 'waiting_for_approval'){
+        $room = ChatRoom::where('slug', $request->chat_slug)->firstOrFail();
+        $joinRequest = $this->joinRepository->findByUserRoom($user->id, $room->id);
+        if ($joinRequest && $joinRequest->status == 'waiting_for_approval') {
             return response()->json([
                 'message' => 'باتشکر از شکیبایی شما. بعد از تایید ادمین وارد اتاق میشوید.'
-            ],200);
+            ], 200);
         }
-        if ($joinRequest && $joinRequest->status == 'reject'){
+        if ($joinRequest && $joinRequest->status == 'reject') {
             return response()->json([
                 'message' => 'درخواست شما برای وارد شدن به اتاق رد شده است.'
-            ],200);
+            ], 200);
         }
-        if ($joinRequest && $joinRequest->status == 'accept'){
+        if ($joinRequest && $joinRequest->status == 'accept') {
             return response()->json([
                 'message' => 'شما وارد اتاق شده اید.'
-            ],200);
+            ], 200);
         }
-        $link = url($locale.'/api/community/chat/join/' . $room->slug);
-        $this->joinRepository->joinViaLink($user->id ,$room->id,$link);
+        $link = url($locale . '/api/community/chat/join/' . $room->slug);
+        $this->joinRepository->joinViaLink($user->id, $room->id, $link);
 
         return response()->json([
-            'message' => 'بعداز تایید ادمین وارد اتاق " '.$room->title.'" میشوید.'
-        ],201);
+            'message' => 'بعداز تایید ادمین وارد اتاق " ' . $room->title . '" میشوید.'
+        ], 201);
     }
 
     public function addMember($locale, ChatRoom $chat_slug, AddRemoveMemberRequest $request)
     {
-        $member = UserProfile::where('user_id',$request->memberId)->where('status','active')->first();
-        if (!$member){
+        $member = UserProfile::where('user_id', $request->memberId)->where('status', 'active')->first();
+        if (!$member) {
             return response()->json([
                 'message' => 'امکان عضویت در اتاق وجود ندارد.',
             ], 404);
@@ -492,7 +548,7 @@ class ChatRoomController extends Controller
         $chat_slug->members()->attach($member->user_id);
         $memberCount =  $chat_slug->members()->count();
 
-        AddChatroomMember::dispatch($chat_slug->id,[
+        AddChatroomMember::dispatch($chat_slug->id, [
             'id' => $member->user_id,
             "displayName" => $member->getDisplayName(),
             'avatarUrl' => $member->avatar_url,
@@ -519,17 +575,17 @@ class ChatRoomController extends Controller
         ]);
     }
 
-    public function removeRoomMember($locale, Category $category_slug, ChatRoom $chat_slug,AddRemoveMemberRequest $request)
+    public function removeRoomMember($locale, Category $category_slug, ChatRoom $chat_slug, AddRemoveMemberRequest $request)
     {
         /*if(!$this->userCanChangeRoomInfo($chat_slug)){
             return response()->json([
                 'message' => 'برای تغییر در اتاق باید عضو اتاق باشید.',
             ], 400);
         }*/
-        $member = UserProfile::where('user_id',$request->memberId)->firstOrFail();
+        $member = UserProfile::where('user_id', $request->memberId)->firstOrFail();
         $chat_slug->members()->detach($member->user_id);
         $memberCount =  $chat_slug->members()->count();
-        RemoveChatroomMember::dispatch($chat_slug->id,[
+        RemoveChatroomMember::dispatch($chat_slug->id, [
             "id" => $member->id,
             "displayName" => $member->getDisplayName(),
             'avatarUrl' => $member->avatar_url,
@@ -537,11 +593,11 @@ class ChatRoomController extends Controller
         ]);
         return response()->json([
             'room' => [
-               "id" => $chat_slug->id,
+                "id" => $chat_slug->id,
                 "title" => $chat_slug->title,
                 "slug" => $chat_slug->slug,
                 "memberCount" => $memberCount
-                ],
+            ],
             'category' => [
                 "id" => $category_slug->id,
                 "title" => $category_slug->title,
@@ -551,7 +607,7 @@ class ChatRoomController extends Controller
         ]);
     }
 
-    public function editRoomDescription($locale, Category $category_slug, ChatRoom $room,EditDescriptionRequest $request)
+    public function editRoomDescription($locale, Category $category_slug, ChatRoom $room, EditDescriptionRequest $request)
     {
         /*if(!$this->userCanChangeRoomInfo($room)){
             return response()->json([
@@ -560,7 +616,7 @@ class ChatRoomController extends Controller
         }*/
         $room->update(['description' => $request->description]);
 
-        $data =[
+        $data = [
             'roomId' => $room->id,
             'slug' => $room->slug,
             'title' => $room->title,
@@ -572,13 +628,13 @@ class ChatRoomController extends Controller
             'membersCount' => $room->members_count,
             'avatarUrl' => $room->avatar_url,
             'bannerUrl' => $room->banner_url,
-            'membersListSummary' => $room->previewMembers->take(5)->map( fn($membership) => [
+            'membersListSummary' => $room->previewMembers->take(5)->map(fn ($membership) => [
                 'id' => $membership->user_id,
                 'displayName' => $membership->getDisplayName(),
                 'secondaryText' => $membership->email,
                 'avatarUrl' => $membership->avatar_url,
             ]),
-            'otherRooms' => $this->getOtherRooms($locale,$room->slug),
+            'otherRooms' => $this->getOtherRooms($locale, $room->slug),
             'description' => $room->description
         ];
         EditDescriptionChatroom::dispatch($room->id, $data);
@@ -606,14 +662,13 @@ class ChatRoomController extends Controller
             'counts_status' => $counts,
             'counts_position' => $counts_case, //is_private
         ]);
-
     }
 
     public function getChatRoomsPannelData($locale, Request $request)
     {
         $query = ChatRoom::with(['previewMembers', 'category'])->withCount('members');
 
-        $sortOrder= 'desc';
+        $sortOrder = 'desc';
         if (isset($request->sortOrder) && ($request->sortOrder ==  'asc' || $request->sortOrder ==  'desc')) {
             $sortOrder = $request->sortOrder;
         }
@@ -639,7 +694,7 @@ class ChatRoomController extends Controller
     public function updateRoomStatus($locale, UpdateRoomStatusRequest $request)
     {
         ChatRoom::whereIn('id', $request['ids'])
-        ->update(['status' => $request['status']]);
+            ->update(['status' => $request['status']]);
 
         return [
             'updatedRooms' => $request['ids'],
@@ -649,12 +704,12 @@ class ChatRoomController extends Controller
     public function getCreatChatRoomsPannelCommon()
     {
         $categories =  $this->categoryService->getCategoriesForFilter(new ChatRoom());
-        $users = UserProfile::where('status','active')->get()
-                ->map(fn($user)=>[
-                    'id' => $user->user_id,
-                    'displayName' => $user->getDisplayName(),
-                    'avatarUrl' => $user->avatar_url,
-                ]);
+        $users = UserProfile::where('status', 'active')->get()
+            ->map(fn ($user) => [
+                'id' => $user->user_id,
+                'displayName' => $user->getDisplayName(),
+                'avatarUrl' => $user->avatar_url,
+            ]);
         return response()->json([
             'categories' => $categories,
             'users' => $users,
@@ -695,7 +750,9 @@ class ChatRoomController extends Controller
         $slug->members()->detach();
         $slug->delete();
         return response(
-            "OK", 200);
+            "OK",
+            200
+        );
     }
 
     public function getChatData($locale, $id)
@@ -704,11 +761,11 @@ class ChatRoomController extends Controller
         return new ChatRoomResource($room);
     }
 
-    public function updateChat($locale, UpdateRoomRequest $request,ChatRoom $room)
+    public function updateChat($locale, UpdateRoomRequest $request, ChatRoom $room)
     {
         $data = $request->only(ChatRoom::getModel()->fillable);
 
-        if ($request->file('file')){
+        if ($request->file('file')) {
             $fileService = new FileService();
             $fileUrl = $fileService->uploadOneFile(
                 $request,
@@ -742,12 +799,12 @@ class ChatRoomController extends Controller
     {
         $user = auth()->user();
         $checkUser = $room->members()->pluck('community_chat_room_memberships.user_id')->toArray();
-        if (!$user){
+        if (!$user) {
             return response()->json([
                 'message' => 'ابتدا وارد شوید.',
             ], 401);
         }
-        if(!in_array($user->id, $checkUser)) {
+        if (!in_array($user->id, $checkUser)) {
             return false;
         }
         return true;

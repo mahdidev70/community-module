@@ -55,7 +55,7 @@ class ChatRoom extends Model
     }
 
     public function unreadCountMessage() {
-        return $this->belongsToMany(UserProfile::class, 'community_chat_room_memberships', 'chat_room_id', 'user_id')->select('unread_count')->pluck('unread_count')->first();
+        return $this->belongsToMany(UserProfile::class, 'community_chat_room_memberships', 'chat_room_id', 'user_id','id','user_id')->select('unread_count')->pluck('unread_count')->first();
     }
 
 }

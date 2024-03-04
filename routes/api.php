@@ -25,7 +25,7 @@ use TechStudio\Community\app\Http\Controllers\SearchController;
 Route::get('/question/search', [SearchController::class, 'searchQuestion']);
 
 Route::get('community/chat/{category_slug}/{chat_slug}/common', [ChatRoomController::class, 'getSingleChatPageCommonData']);
-// Route::get('community/chat/{category_slug}/{chat_slug}/data/preview', [ChatRoomController::class, 'getPreviewSingleChatPageMessages']);
+Route::get('community/chat/{category_slug}/{chat_slug}/data/preview', [ChatRoomController::class, 'getPreviewSingleChatPageMessages']);
 
 Route::prefix('community')->group(function() {
     Route::middleware("auth:sanctum")->group(function () {

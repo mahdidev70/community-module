@@ -87,55 +87,69 @@ class ChatRoomController extends Controller
     public function getPreviewSingleChatPageMessages()
     {
         $data = [
-            '0' => [
-                'id' => 55,
-                'userId' => 44,
-                'userDisplayName' => 'کاربر جدید',
-                'stars' => null,
-                'avatarUrl' => 'https://storage.sa-test.techstudio.diginext.ir/community-files/65e4a20586d69.png',
-                'doubleChecks' => 0,
-                'date' => '2024-03-03T09:44:38.000000Z',
-                'message' => 'راهکارتون برای فروش بیشتر چیه؟',
-                'replyTo' => null,
-                'reactions' => [
-                    "totalReactions" => [],
-                    "currentUserReaction" => []
+            'data' => [
+                '0' => [
+                    'id' => 55,
+                    'userId' => 44,
+                    'userDisplayName' => 'کاربر جدید',
+                    'stars' => null,
+                    'avatarUrl' => 'https://storage.sa-test.techstudio.diginext.ir/community-files/65e4a20586d69.png',
+                    'doubleChecks' => 0,
+                    'date' => '2024-03-03T09:44:38.000000Z',
+                    'message' => 'راهکارتون برای فروش بیشتر چیه؟',
+                    'replyTo' => null,
+                    'reactions' => [
+                        "totalReactions" => [],
+                        "currentUserReaction" => []
+                    ],
+                    'attachments' => []
                 ],
-                'attachments' => []
-            ],
-            '1' => [
-                'id' => 55,
-                'userId' => 44,
-                'userDisplayName' => 'کاربر جدید',
-                'stars' => null,
-                'avatarUrl' => 'https://storage.sa-test.techstudio.diginext.ir/community-files/65e4a20586d69.png',
-                'doubleChecks' => 0,
-                'date' => '2024-03-03T09:44:38.000000Z',
-                'message' => 'راهکارتون برای فروش بیشتر چیه؟',
-                'replyTo' => null,
-                'reactions' => [
-                    "totalReactions" => [],
-                    "currentUserReaction" => []
+                '1' => [
+                    'id' => 55,
+                    'userId' => 44,
+                    'userDisplayName' => 'کاربر جدید',
+                    'stars' => null,
+                    'avatarUrl' => 'https://storage.sa-test.techstudio.diginext.ir/community-files/65e4a20586d69.png',
+                    'doubleChecks' => 0,
+                    'date' => '2024-03-03T09:44:38.000000Z',
+                    'message' => 'راهکارتون برای فروش بیشتر چیه؟',
+                    'replyTo' => null,
+                    'reactions' => [
+                        "totalReactions" => [],
+                        "currentUserReaction" => []
+                    ],
+                    'attachments' => []
                 ],
-                'attachments' => []
-            ],
-            '2' => [
-                'id' => 55,
-                'userId' => 44,
-                'userDisplayName' => 'کاربر جدید',
-                'stars' => null,
-                'avatarUrl' => 'https://storage.sa-test.techstudio.diginext.ir/community-files/65e4a20586d69.png',
-                'doubleChecks' => 0,
-                'date' => '2024-03-03T09:44:38.000000Z',
-                'message' => 'راهکارتون برای فروش بیشتر چیه؟',
-                'replyTo' => null,
-                'reactions' => [
-                    "totalReactions" => [],
-                    "currentUserReaction" => []
+                '2' => [
+                    'id' => 55,
+                    'userId' => 44,
+                    'userDisplayName' => 'کاربر جدید',
+                    'stars' => null,
+                    'avatarUrl' => 'https://storage.sa-test.techstudio.diginext.ir/community-files/65e4a20586d69.png',
+                    'doubleChecks' => 0,
+                    'date' => '2024-03-03T09:44:38.000000Z',
+                    'message' => 'راهکارتون برای فروش بیشتر چیه؟',
+                    'replyTo' => null,
+                    'reactions' => [
+                        "totalReactions" => [],
+                        "currentUserReaction" => []
+                    ],
+                    'attachments' => []
+                ]
                 ],
-                'attachments' => []
-            ]
-        ];
+            'current_page' => 1,
+            'first_page_url' => '',
+            'from' => '',
+            'last_page' => '',
+            'last_page_url' => '',
+            'links' => [],
+            'next_page_url' => '',
+            'path' => 'sdfdsf',
+            'per_page' => 1,
+            'prev_page_url' => null,
+            'to' => 2,
+            'total' => 10
+            ];
         return [
             "loginUserAllowToChat" => false,
             "data" => $data

@@ -52,8 +52,8 @@ class ChatRoomController extends Controller
             ->withCount('members')
             ->firstOrFail();
         $allow = false;
-        if(auth()->check()){
-            $user = auth()->user();
+        if(Auth('sanctum')->user()){
+            $user = Auth('sanctum')->user();
             $allow = $room->members()->where('core_user_profiles.user_id', $user->id)->exists();
         }
 

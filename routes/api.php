@@ -24,6 +24,9 @@ use TechStudio\Community\app\Http\Controllers\SearchController;
 
 Route::get('/question/search', [SearchController::class, 'searchQuestion']);
 
+Route::get('community/chat/{category_slug}/{chat_slug}/common', [ChatRoomController::class, 'getSingleChatPageCommonData']);
+// Route::get('community/chat/{category_slug}/{chat_slug}/data/preview', [ChatRoomController::class, 'getPreviewSingleChatPageMessages']);
+
 Route::prefix('community')->group(function() {
     Route::middleware("auth:sanctum")->group(function () {
         Route::prefix('chat')->group(function () {
@@ -32,7 +35,7 @@ Route::prefix('community')->group(function() {
             Route::get('rooms/data', [ChatRoomController::class, 'getChatRoomsData']); // Done
             Route::get('join/{chat_slug?}', [ChatRoomController::class, 'join'])->name('join.chatroom'); // Done
             Route::post('room/{chat_slug}/upload_cover', [ChatRoomController::class, 'uploadCover'])->can('community');
-            Route::get('{category_slug}/{chat_slug}/common', [ChatRoomController::class, 'getSingleChatPageCommonData']);// Done
+
             Route::get('{category_slug}/{chat_slug}/members', [ChatRoomController::class, 'getChatRoomMembers'])->can('chat-room');// Done
 
             Route::post('add/{chat_slug}', [ChatRoomController::class, 'addMember'])->can('community'); // Done

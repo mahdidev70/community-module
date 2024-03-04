@@ -51,6 +51,11 @@ class ChatRoomController extends Controller
             ->with(['previewMembers', 'category'])
             ->withCount('members')
             ->firstOrFail();
+        $allow = false;
+        if(auth()->check()){
+            $user = auth()->user();
+            $allow = $room->members()->where('core_user_profiles.user_id', $user->id)->exists();
+        }
 
         return [
             'roomId' => $room->id,
@@ -71,8 +76,14 @@ class ChatRoomController extends Controller
                 'avatarUrl' => $membership->avatar_url,
             ]),
             'otherRooms' => $this->getOtherRooms($locale,$chat_slug),
-            'description' => $room->description
+            'description' => $room->description,
+            "loginUserAllowToChat" =>$allow
         ];
+    }
+
+    public function getPreviewSingleChatPageMessages(){
+        
+        return 'sdf';
     }
 
     public function getSingleChatPageMessages($locale, $category_slug, $chat_slug)

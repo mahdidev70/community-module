@@ -51,7 +51,7 @@ class ChatRoom extends Model
     }
 
     public function previewMembers() {
-        return $this->belongsToMany(UserProfile::class, 'community_chat_room_memberships', 'chat_room_id', 'user_id')->where('status','active');
+        return $this->belongsToMany(UserProfile::class, 'community_chat_room_memberships', 'chat_room_id', 'user_id','id','user_id')->where('status','active');
     }
 
     public function unreadCountMessage() {

@@ -33,7 +33,7 @@ Route::prefix('community')->group(function() {
 
             Route::get('rooms/common', [ChatRoomController::class, 'getChatRoomsCommon']); // Done
             Route::get('rooms/data', [ChatRoomController::class, 'getChatRoomsData']); // Done
-            Route::get('join/{chat_slug?}', [ChatRoomController::class, 'join'])->name('join.chatroom'); // Done
+            Route::post('join/{chat_slug?}', [ChatRoomController::class, 'join'])->name('join.chatroom'); // Done
             Route::post('room/{chat_slug}/upload_cover', [ChatRoomController::class, 'uploadCover'])->can('community');
 
             Route::get('{category_slug}/{chat_slug}/members', [ChatRoomController::class, 'getChatRoomMembers'])->can('chat-room');// Done

@@ -26,7 +26,7 @@ Route::get('/question/search', [SearchController::class, 'searchQuestion']);
 
 Route::get('community/chat/{category_slug}/{chat_slug}/common', [ChatRoomController::class, 'getSingleChatPageCommonData']);
 Route::get('community/chat/{category_slug}/{chat_slug}/data/preview', [ChatRoomController::class, 'getPreviewSingleChatPageMessages']);
-Route::get('community/chat/recentChatsSidebar', [ChatRoomController::class, 'previewRecentChatsSidebar']);
+Route::get('community/chat/recentChatsSidebar/preview', [ChatRoomController::class, 'previewRecentChatsSidebar']);
 
 Route::prefix('community')->group(function() {
     Route::middleware("auth:sanctum")->group(function () {

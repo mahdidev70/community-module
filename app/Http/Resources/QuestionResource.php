@@ -19,6 +19,7 @@ class QuestionResource extends JsonResource
             'qText' => $this->text,
             'slug' => $this->slug,
             'creationDate' =>$this->created_at,
+            'categoryId' => $this->category->id ?? '',
             'category' => [
                 'id' => $this->category->id ?? '',
                 'title' => $this->category->title ?? '',

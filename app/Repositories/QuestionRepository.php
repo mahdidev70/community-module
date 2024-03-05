@@ -69,7 +69,7 @@ class QuestionRepository implements QuestionRepositoryInterface
                 'text' => $data['qText'],
                 'slug'=> $data['slug'] ? $data['slug'] : SlugGenerator::transform($data['qText']) ,
                 'asker_user_id' => $user->id,
-                'category_id' => $data['category'],
+                'category_id' => $data['categoryId'],
             ]
         );
         if ($data['attachments']) {

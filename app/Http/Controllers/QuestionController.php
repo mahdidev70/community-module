@@ -351,6 +351,7 @@ class QuestionController extends Controller
 
         $categories = Category::where('table_type', get_class($quesitonModel))->get()->map(function ($category) {
             return [
+                'id' => $category->id,
                 'title' => $category->title,
                 'slug' => $category->slug,
             ];

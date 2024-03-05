@@ -419,9 +419,7 @@ class ChatRoomController extends Controller
                 });
             }
             $rooms = $query;
-        } else {
-            $rooms = $query->inRandomOrder();
-        }
+        } 
         $rooms =  $rooms->withCount('members')
             ->paginate(12);
         $data = $rooms->map(fn ($room) => [

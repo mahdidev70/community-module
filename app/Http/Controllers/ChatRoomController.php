@@ -136,7 +136,7 @@ class ChatRoomController extends Controller
                     ],
                     'attachments' => []
                 ]
-                ],
+            ],
             'current_page' => 1,
             'first_page_url' => '',
             'from' => '',
@@ -149,10 +149,69 @@ class ChatRoomController extends Controller
             'prev_page_url' => null,
             'to' => 2,
             'total' => 10
-            ];
+        ];
         return [
             "loginUserAllowToChat" => false,
             "data" => $data
+        ];
+    }
+
+    public function previewRecentChatsSidebar()
+    {
+        $result = [
+            'rooms' =>   [
+                "0" => [
+                    "id" => 8,
+                    "slug" => "فروشندگان-غرب-ایران",
+                    "title" => "فروشندگان غرب ایران",
+                    "avatarUrl" => "https://storage.sa-test.techstudio.diginext.ir/community-files/65e5ec9045fc0.png",
+                    "description" => "در این اتاق، امکان بحرانی کردن در موضوعات جذاب و جدید در زمینه بازاریابی و تبادل دانش و تجربیات بازاریابان ماهر و علاقه‌مند وجود دارد. با شرکت در این گفتگوها، می‌توانید از اندیشه‌ها و استراتژی‌های دیگران بهره‌مند شده و به ارتقاء مهارت‌های بازاریابی خود بپردازید.",
+                    "category" => "سراسر-ایران",
+                    "unreadCount" => 2,
+                    "lastMessage" => [
+                        "date" => "2024-03-05T08:46:55.000000Z",
+                        "text" => "ظاهرا مشکلی نداره بازم چک کن",
+                        "sender" => [
+                            "displayName" => "مهدی سمیعیان"
+                        ],
+                        "hasAttachment" => []
+                    ]
+                ],
+                "1" => [
+                    "id" => 8,
+                    "slug" => "فروشندگان-غرب-ایران",
+                    "title" => "فروشندگان غرب ایران",
+                    "avatarUrl" => "https://storage.sa-test.techstudio.diginext.ir/community-files/65e5ec9045fc0.png",
+                    "description" => "در این اتاق، امکان بحرانی کردن در موضوعات جذاب و جدید در زمینه بازاریابی و تبادل دانش و تجربیات بازاریابان ماهر و علاقه‌مند وجود دارد. با شرکت در این گفتگوها، می‌توانید از اندیشه‌ها و استراتژی‌های دیگران بهره‌مند شده و به ارتقاء مهارت‌های بازاریابی خود بپردازید.",
+                    "category" => "سراسر-ایران",
+                    "unreadCount" => 2,
+                    "lastMessage" => [
+                        "date" => "2024-03-05T08:46:55.000000Z",
+                        "text" => "ظاهرا مشکلی نداره بازم چک کن",
+                        "sender" => [
+                            "displayName" => "مهدی سمیعیان"
+                        ],
+                        "hasAttachment" => []
+                    ]
+                ],
+                "2" => [
+                    "id" => 8,
+                    "slug" => "فروشندگان-غرب-ایران",
+                    "title" => "فروشندگان غرب ایران",
+                    "avatarUrl" => "https://storage.sa-test.techstudio.diginext.ir/community-files/65e5ec9045fc0.png",
+                    "description" => "در این اتاق، امکان بحرانی کردن در موضوعات جذاب و جدید در زمینه بازاریابی و تبادل دانش و تجربیات بازاریابان ماهر و علاقه‌مند وجود دارد. با شرکت در این گفتگوها، می‌توانید از اندیشه‌ها و استراتژی‌های دیگران بهره‌مند شده و به ارتقاء مهارت‌های بازاریابی خود بپردازید.",
+                    "category" => "سراسر-ایران",
+                    "unreadCount" => 2,
+                    "lastMessage" => [
+                        "date" => "2024-03-05T08:46:55.000000Z",
+                        "text" => "ظاهرا مشکلی نداره بازم چک کن",
+                        "sender" => [
+                            "displayName" => "مهدی سمیعیان"
+                        ],
+                        "hasAttachment" => []
+                    ]
+                ]
+            ]
         ];
     }
 

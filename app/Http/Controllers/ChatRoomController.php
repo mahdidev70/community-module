@@ -761,7 +761,7 @@ class ChatRoomController extends Controller
             }
         }
 
-        $rooms =  $query->orderBy('id', 'desc')->paginate(12);
+        $rooms =  $query->orderBy('id', 'desc')->paginate(10);
         return new ChatRoomsResource($rooms);
     }
 

@@ -418,10 +418,9 @@ class ChatRoomController extends Controller
                     $categoryQuery->where('slug', $request->input('categorySlug'));
                 });
             }
-            $rooms = $query;
         } 
-        $rooms =  $rooms->withCount('members')
-            ->paginate(12);
+        $rooms =  $query->withCount('members')->paginate(12);
+        
         $data = $rooms->map(fn ($room) => [
             'roomId' => $room->id,
             'slug' => $room->slug,

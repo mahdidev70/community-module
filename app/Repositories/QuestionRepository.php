@@ -73,9 +73,11 @@ class QuestionRepository implements QuestionRepositoryInterface
             ]
         );
         if ($data['attachments']) {
-                 $question['attachments'] = $question->associateAttachments($data['attachments']);
-            }
+            $question['attachments'] = $question->associateAttachments($data['attachments']);
+        }
 
-        return $question;
+        $data = Question::where('id', $question->id)->first();
+
+        return $data;
     }
 }

@@ -23,7 +23,7 @@ class ChatRoom extends Model
     {
         parent::boot();
 
-        if (!request()->is(['*/api/panel/*'])) {
+        if (!request()->is(['*/api/panel/chat*'])) {
             static::addGlobalScope('publiclyVisible', function (Builder $builder) {
                 $builder->where('status', 'active');
             });

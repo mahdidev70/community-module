@@ -22,7 +22,7 @@ class AddRemoveMemberRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "memberId" => ['required', 'integer', 'exists:core_user_profiles,id']
+            "memberId" => ['required', 'integer', 'exists:core_user_profiles,user_id']
         ];
     }
 }

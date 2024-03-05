@@ -213,6 +213,7 @@ class ChatRoomController extends Controller
                 ]
             ]
         ];
+        return $result;
     }
 
     public function getSingleChatPageMessages($locale, $category_slug, $chat_slug)

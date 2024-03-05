@@ -60,7 +60,7 @@ class AnswerRepository implements AnswerRepositoryInterface
             [
                 'question_id' => $data['questionId'],
                 'user_id' => $user->id,
-                'text' => $data['text'],
+                'text' => $data['aText'],
                 'attachments' => $data['attachments'],
             ]
         );

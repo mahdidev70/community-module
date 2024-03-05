@@ -66,8 +66,8 @@ class QuestionRepository implements QuestionRepositoryInterface
         $question = Question::updateOrCreate(
             ['id' => $data['id']],
             [
-                'text' => $data['QText'],
-                'slug'=> $data['slug'] ? $data['slug'] : SlugGenerator::transform($data['QText']) ,
+                'text' => $data['qText'],
+                'slug'=> $data['slug'] ? $data['slug'] : SlugGenerator::transform($data['qText']) ,
                 'asker_user_id' => $user->id,
                 'category_id' => $data['category'],
             ]

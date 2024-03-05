@@ -41,7 +41,8 @@ class CommunityHomePageController extends Controller
         $user_rooms = [];
         $user_rooms_count = 0;
 
-        if ($user = auth()->user()){
+        if (Auth('sanctum')->user()){
+            $user = Auth('sanctum')->user();
             $user_rooms = $user->chatRooms()->with('category', 'previewMembers')->withCount('members')->get()
                 ->map(
                      fn ($room) => [

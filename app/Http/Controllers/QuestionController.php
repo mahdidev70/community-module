@@ -2,24 +2,25 @@
 
 namespace TechStudio\Community\app\Http\Controllers;
 
-use App\Helper\SlugGenerator;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Helper\SlugGenerator;
 use Illuminate\Support\Facades\DB;
-use Symfony\Component\HttpFoundation\Exception\BadRequestException;
-use TechStudio\Community\app\Http\Requests\CreateQuestionRequest;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use TechStudio\Core\app\Models\Category;
+use TechStudio\Community\app\Models\Answer;
+use TechStudio\Community\app\Models\Question;
+use TechStudio\Core\app\Services\File\FileService;
 use TechStudio\Community\app\Http\Requests\ReactRequest;
-use TechStudio\Community\app\Http\Requests\UpdateQuestionStatusRequest;
 use TechStudio\Community\app\Http\Resources\AnswerResource;
 use TechStudio\Community\app\Http\Resources\AnswersResource;
 use TechStudio\Community\app\Http\Resources\QuestionResource;
 use TechStudio\Community\app\Http\Resources\QuestionsResource;
-use TechStudio\Community\app\Models\Answer;
-use TechStudio\Community\app\Models\Question;
+use TechStudio\Community\app\Http\Requests\CreateQuestionRequest;
+use TechStudio\Community\app\Http\Resources\QuestionsOldResource;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
+use TechStudio\Community\app\Http\Requests\UpdateQuestionStatusRequest;
 use TechStudio\Community\app\Repositories\Interfaces\QuestionRepositoryInterface;
-use TechStudio\Core\app\Models\Category;
-use TechStudio\Core\app\Services\File\FileService;
 
 class QuestionController extends Controller
 {
@@ -157,44 +158,45 @@ class QuestionController extends Controller
         }
 
 
-            $questions = $questions->take(10)->paginate(5)->through(
-            fn ($q) => [
-                'id' => $q->id,
-                'slug' => $q->slug,
-                'text' => $q->text,
-                'status' => $q->status,
-                'creationDate' => $q->created_at,
-                'viewsCount' => $q->viewsCount,
-                'category' => [
-                    'slug' => $q->category?$q->category->slug:null,
-                    'title' => $q->category?$q->category->title:null,
-                ],
-                'asker' => [
-                    'displayName' => $q->asker->getDisplayName(),
-                    'avatarUrl' => $q->asker->avatar_url,
-                    'id' => $q->asker->id,
-                    'tag' => $q->asker->getTag(),
-                ],
-                'feedback' => [
-                    'likesCount' => $q->likes_count,
-                    'dislikesCount' => $q->dislikes_count,
-                    'currentUserAction' => $q->current_user_feedback(),
-                ],
-                'topAnswers' => $q->topAnswers->map( fn($answer) => [
-                    'id' => $answer->user->id,
-                    'displayName' => $answer->user->getDisplayName(),
-                    'avatarUrl' => $answer->user->avatar_url,
-                ]),
-                'answersCount' => $q->answers_count,
-                'attachments' => $q->attachments->map(fn ($file) => [
-                    'id' => $file->id,
-                    'type' => 'image',  // TODO: infer
-                    'previewImageUrl' => $file->file_url,
-                    'contentUrl' => $file->file_url,
-                ]),
-            ]
-        );
-        return $questions;
+            $questions = $questions->take(10)->paginate(5);
+        //     ->through(
+        //     fn ($q) => [
+        //         'id' => $q->id,
+        //         'slug' => $q->slug,
+        //         'text' => $q->text,
+        //         'status' => $q->status,
+        //         'creationDate' => $q->created_at,
+        //         'viewsCount' => $q->viewsCount,
+        //         'category' => [
+        //             'slug' => $q->category?$q->category->slug:null,
+        //             'title' => $q->category?$q->category->title:null,
+        //         ],
+        //         'asker' => [
+        //             'displayName' => $q->asker->getDisplayName(),
+        //             'avatarUrl' => $q->asker->avatar_url,
+        //             'id' => $q->asker->id,
+        //             'tag' => $q->asker->getTag(),
+        //         ],
+        //         'feedback' => [
+        //             'likesCount' => $q->likes_count,
+        //             'dislikesCount' => $q->dislikes_count,
+        //             'currentUserAction' => $q->current_user_feedback(),
+        //         ],
+        //         'topAnswers' => $q->topAnswers->map( fn($answer) => [
+        //             'id' => $answer->user->id,
+        //             'displayName' => $answer->user->getDisplayName(),
+        //             'avatarUrl' => $answer->user->avatar_url,
+        //         ]),
+        //         'answersCount' => $q->answers_count,
+        //         'attachments' => $q->attachments->map(fn ($file) => [
+        //             'id' => $file->id,
+        //             'type' => 'image',  // TODO: infer
+        //             'previewImageUrl' => $file->file_url,
+        //             'contentUrl' => $file->file_url,
+        //         ]),
+        //     ]
+        // );
+        return new QuestionsOldResource($questions);
     }
 
     public function storeFeedbackToQuestion($local, $question_slug, ReactRequest $request) {

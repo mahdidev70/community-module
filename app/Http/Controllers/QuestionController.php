@@ -159,43 +159,6 @@ class QuestionController extends Controller
 
 
             $questions = $questions->take(10)->paginate(5);
-        //     ->through(
-        //     fn ($q) => [
-        //         'id' => $q->id,
-        //         'slug' => $q->slug,
-        //         'text' => $q->text,
-        //         'status' => $q->status,
-        //         'creationDate' => $q->created_at,
-        //         'viewsCount' => $q->viewsCount,
-        //         'category' => [
-        //             'slug' => $q->category?$q->category->slug:null,
-        //             'title' => $q->category?$q->category->title:null,
-        //         ],
-        //         'asker' => [
-        //             'displayName' => $q->asker->getDisplayName(),
-        //             'avatarUrl' => $q->asker->avatar_url,
-        //             'id' => $q->asker->id,
-        //             'tag' => $q->asker->getTag(),
-        //         ],
-        //         'feedback' => [
-        //             'likesCount' => $q->likes_count,
-        //             'dislikesCount' => $q->dislikes_count,
-        //             'currentUserAction' => $q->current_user_feedback(),
-        //         ],
-        //         'topAnswers' => $q->topAnswers->map( fn($answer) => [
-        //             'id' => $answer->user->id,
-        //             'displayName' => $answer->user->getDisplayName(),
-        //             'avatarUrl' => $answer->user->avatar_url,
-        //         ]),
-        //         'answersCount' => $q->answers_count,
-        //         'attachments' => $q->attachments->map(fn ($file) => [
-        //             'id' => $file->id,
-        //             'type' => 'image',  // TODO: infer
-        //             'previewImageUrl' => $file->file_url,
-        //             'contentUrl' => $file->file_url,
-        //         ]),
-        //     ]
-        // );
         return new QuestionsOldResource($questions);
     }
 

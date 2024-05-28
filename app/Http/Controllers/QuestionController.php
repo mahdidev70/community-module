@@ -27,7 +27,7 @@ class QuestionController extends Controller
     private QuestionRepositoryInterface $questionRepository;
 
     public function __construct(
-        protected FileService $fileService,
+        protected FileService       $fileService,
         QuestionRepositoryInterface $questionRepository,
     )
     {
@@ -40,8 +40,8 @@ class QuestionController extends Controller
             "text" => $question->text,
             "creationDate" => $question->created_at,
             "category" => [
-                "title" => $question->category?$question->category->title:null,
-                "slug" => $question->category?$question->category->slug:null
+                "title" => $question->category ? $question->category->title : null,
+                "slug" => $question->category ? $question->category->slug : null
             ],
             'asker' => [
                 'id' => $question->asker->id,
@@ -65,7 +65,7 @@ class QuestionController extends Controller
             'viewsCount' => $question->viewsCount
         ];
 
-        $relevantQuestions = Question::where('category_id',$question->category_id)
+        $relevantQuestions = Question::where('category_id', $question->category_id)
             ->latest()
             ->take(5)
             ->select('slug', 'text AS title')
@@ -75,7 +75,7 @@ class QuestionController extends Controller
             ->with('user')
             ->latest()
             ->get()
-            ->map(function($answer) {
+            ->map(function ($answer) {
                 return $this->formatAnswer($answer);
             });
 
@@ -115,19 +115,20 @@ class QuestionController extends Controller
         ];
     }
 
-    public function getHomepageQuestionsData(Request $request) {
+    public function getHomepageQuestionsData(Request $request)
+    {
         $questions = Question::where('status', 'approved');
-            if (auth()->user()){
-                $questions->orWhere(function ($query) {
-                    $query->where('status', 'waiting_for_approval')
-                        ->where('asker_user_id', auth()->id() );
-                });
-            }
+        if (auth()->guard('api')->user()) {
+            $questions->orWhere(function ($query) {
+                $query->where('status', 'waiting_for_approval')
+                    ->where('asker_user_id', auth()->id());
+            });
+        }
         $questions->with(['asker', 'category', 'attachments', 'topAnswers'])
             ->withCount('answers')->withCount('likes');
         if (!$request->has('sort')) {
             $questions->orderBy('created_at', 'DESC');
-        }else{
+        } else {
             if ($request->sort == 'recent') {
                 $questions->orderBy('created_at', 'DESC');
             } else if ($request->sort == 'views') {
@@ -140,10 +141,10 @@ class QuestionController extends Controller
                     ->where('core_likes.action', '=', 'like')
                     ->groupBy('community_questions.id')
                     ->orderByDesc('like_count');
-            } else if($request->sort == 'noneAnswer'){
+            } else if ($request->sort == 'noneAnswer') {
 
-                $questions->whereHas('answers', null, '<',1)
-                ->orderBy('created_at', 'desc');
+                $questions->whereHas('answers', null, '<', 1)
+                    ->orderBy('created_at', 'desc');
             } else {
                 return response()->json(
                     ['message' => "Unexpected sorting parameter. Use 'recent', 'views' or 'likes'."], 400
@@ -151,43 +152,45 @@ class QuestionController extends Controller
             }
         }
 
-        if ($request->has('category') && strlen($request->category) > 0){
-            $questions->whereHas('category',function ($query) use($request){
+        if ($request->has('category') && strlen($request->category) > 0) {
+            $questions->whereHas('category', function ($query) use ($request) {
                 $query->whereIn('slug', explode(',', $request->category));
             });
         }
 
 
-            $questions = $questions->take(10)->paginate(5);
+        $questions = $questions->take(10)->paginate(5);
         return new QuestionsOldResource($questions);
     }
 
-    public function storeFeedbackToQuestion($local, $question_slug, ReactRequest $request) {
+    public function storeFeedbackToQuestion($local, $question_slug, ReactRequest $request)
+    {
         $question_query = Question::where('slug', $question_slug)->where('status', 'approved')->first();
-        if (!$question_query){
+        if (!$question_query) {
             return response()->json([
                 'message' => 'مجاز به دادن لایک/دیسلایک به این سوال نیستید.',
             ], 400);
         }
-        if (auth()->id() == $question_query->asker_user_id){
+        if (auth()->id() == $question_query->asker_user_id) {
             return response()->json([
                 'message' => 'مجاز به دادن لایک/دیسلایک به این سوال نیستید.',
             ], 400);
         }
         $currentUserAction = $request->action;
-            // likeBy() or dislikeBy() or clearBy
-         $functionName = strtolower($request->action).'By';
-          $question_query->$functionName(auth()->id());
-          return [
-              'feedback' => [
-                  'likesCount' => $question_query->getLikes()->count()??0,
-                  'dislikesCount' => $question_query->getDislikes()->count()??0,
-                  'currentUserAction' => $currentUserAction,
-              ],
-          ];
+        // likeBy() or dislikeBy() or clearBy
+        $functionName = strtolower($request->action) . 'By';
+        $question_query->$functionName(auth()->id());
+        return [
+            'feedback' => [
+                'likesCount' => $question_query->getLikes()->count() ?? 0,
+                'dislikesCount' => $question_query->getDislikes()->count() ?? 0,
+                'currentUserAction' => $currentUserAction,
+            ],
+        ];
     }
 
-    public function newQuestion(CreateQuestionRequest $request) {
+    public function newQuestion(CreateQuestionRequest $request)
+    {
         $category = Category::where('slug', $request->categorySlug)->firstOrFail();
         $user = auth()->user();
 
@@ -196,12 +199,12 @@ class QuestionController extends Controller
         $question->asker_user_id = $user->id;
         $question->category_id = $category->id;
         $question->text = $request->text;
-       $question->status = 'waiting_for_approval';
+        $question->status = 'waiting_for_approval';
         $question->save();
         if ($request->attachments) {
             $question['attachments'] = $question->associateAttachments($request->attachments);
         }
-        $question['category'] = ["slug"=>$category->slug,"title"=>$category->title];
+        $question['category'] = ["slug" => $category->slug, "title" => $category->title];
         $question['user'] = [
             'displayName' => $user->getDisplayName(),
             'avatarUrl' => $user->avatar_url,
@@ -210,17 +213,17 @@ class QuestionController extends Controller
         $question['creationDate'] = $question['created_at'];
         unset($question['created_at']);
         return response(
-                $question, 201);
+            $question, 201);
     }
 
     public function singleQuestionData($local, $question_slug, Request $request)
     {
         $question = Question::where('slug', $question_slug)->with(['asker', 'category'])->firstOrFail();
         $question->update([
-            "viewsCount" => $question->viewsCount? $question->viewsCount+1 :1
+            "viewsCount" => $question->viewsCount ? $question->viewsCount + 1 : 1
         ]);
         /*return $question->increment('viewsCount');*/
-        if ($question->status != 'approved' &&  auth()->id() != $question->asker_user_id){
+        if ($question->status != 'approved' && auth()->id() != $question->asker_user_id) {
             return response()->json(
                 ['message' => "باید ابتدا سوال تایید گردد."], 400
             );
@@ -238,7 +241,7 @@ class QuestionController extends Controller
             ->with('user')
             ->latest('created_at')
             ->get()
-            ->map(function($answer) {
+            ->map(function ($answer) {
                 return $this->formatAnswer($answer);
             })
             ->toArray();
@@ -248,7 +251,7 @@ class QuestionController extends Controller
             $userAnswers = $question->allAnswers()
                 ->where(function ($query) {
                     $query->where('user_id', auth()->id())->where('status', 'waiting_for_approval');
-                    })
+                })
                 ->with('user')
                 ->latest('created_at')
                 ->get()
@@ -257,11 +260,11 @@ class QuestionController extends Controller
                 })
                 ->toArray();
         }
-        $answers = array_merge($userAnswers,$questionAnswers);
+        $answers = array_merge($userAnswers, $questionAnswers);
         $sort_function = null;
         if ($request->query('sortBy', 'recent') == 'recent') {
         } else if ($request->query('sortBy') == 'likes') {
-            $sort_function = function($answer_a, $answer_b) {
+            $sort_function = function ($answer_a, $answer_b) {
                 $a_likes = $answer_a['feedback']['likesCount'];
                 $a_dislikes = $answer_a['feedback']['dislikesCount'];
                 $a_popularity = $a_likes - $a_dislikes;
@@ -282,7 +285,8 @@ class QuestionController extends Controller
         ];
     }
 
-    public function newAttachment(Request $request) {
+    public function newAttachment(Request $request)
+    {
         $createdFiles = $this->fileService->upload(
             $request,
             max_count: 3,
@@ -358,7 +362,7 @@ class QuestionController extends Controller
             $myQuestions = Question::where('asker_user_id', $user->id)->paginate(10);
             return new QuestionsResource($myQuestions);
 
-        }elseif ($request['data'] == 'their') {
+        } elseif ($request['data'] == 'their') {
 
             $myAnswer = Answer::where('user_id', $user->id)->paginate(10);
             return new AnswersResource($myAnswer);

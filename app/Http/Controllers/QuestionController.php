@@ -121,7 +121,7 @@ class QuestionController extends Controller
         if (auth()->guard('api')->user()) {
             $questions->orWhere(function ($query) {
                 $query->where('status', 'waiting_for_approval')
-                    ->where('asker_user_id', auth()->id());
+                    ->where('asker_user_id', auth()->guard('api')->id());
             });
         }
         $questions->with(['asker', 'category', 'attachments', 'topAnswers'])

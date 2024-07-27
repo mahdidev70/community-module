@@ -350,10 +350,9 @@ class QuestionController extends Controller
                 $question->delete();
             }
         }
-        else {
-            Question::whereIn('id', $request['ids'])
-                    ->update(['status' => $request['status']]);
-        }
+
+        Question::whereIn('id', $request['ids'])
+                ->update(['status' => $request['status']]);
 
         return [
             'updatedQuestions' => $request['ids'],

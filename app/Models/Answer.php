@@ -9,10 +9,11 @@ use TechStudio\Core\app\Models\Like;
 use TechStudio\Core\app\Models\Traits\Attachable;
 use TechStudio\Core\app\Models\Traits\Likeable;
 use TechStudio\Core\app\Models\UserProfile;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Answer extends Model
 {
-    use HasFactory, Likeable, Attachable;
+    use HasFactory, Likeable, Attachable, SoftDeletes;
 
     protected $table = 'community_answers';
 

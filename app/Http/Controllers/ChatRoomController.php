@@ -418,9 +418,9 @@ class ChatRoomController extends Controller
                     $categoryQuery->where('slug', $request->input('categorySlug'));
                 });
             }
-        } 
+        }
         $rooms =  $query->withCount('members')->paginate(12);
-        
+
         $data = $rooms->map(fn ($room) => [
             'roomId' => $room->id,
             'slug' => $room->slug,
@@ -821,10 +821,12 @@ class ChatRoomController extends Controller
         $room = ChatRoom::query()->findOrFail($id);
         $room->members()->detach();
         $room->delete();
-        return response(
-            "OK",
-            200
-        );
+
+        return response()->json([
+            'data' => [],
+            'status' => 200,
+            'message' => 'با موفقیت انجام شد'
+        ], 200);
     }
 
     public function getChatData($locale, $id)

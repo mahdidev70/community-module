@@ -61,6 +61,15 @@ class Question extends Model
         return $this->morphMany(Like::class, 'likeable')->where('action', 'like');
     }
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('publiclyVisible', function (Builder $builder) {
+            $builder->where('status', '!=', 'deleted');
+        });
+    }
+
     /*protected static function boot()
     {
         parent::boot();

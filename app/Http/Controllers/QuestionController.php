@@ -340,8 +340,21 @@ class QuestionController extends Controller
 
     public function updateQuestionStatus(UpdateQuestionStatusRequest $request)
     {
-        Question::whereIn('id', $request['ids'])
-            ->update(['status' => $request['status']]);
+        if ($request['status'] == 'deleted') {
+            $questions = Question::query()
+                    ->whereIn('id', $request['ids'])
+                    ->get();
+
+            foreach ($questions as $question) {
+                $question->answers()->delete();
+                $question->delete();
+            }
+        }
+        else {
+            Question::whereIn('id', $request['ids'])
+                    ->update(['status' => $request['status']]);
+        }
+
         return [
             'updatedQuestions' => $request['ids'],
         ];

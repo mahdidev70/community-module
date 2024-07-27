@@ -816,10 +816,11 @@ class ChatRoomController extends Controller
         return $room->id;
     }
 
-    public function deleteRoom($locale, ChatRoom $slug)
+    public function deleteRoom($locale, $id)
     {
-        $slug->members()->detach();
-        $slug->delete();
+        $room = ChatRoom::query()->findOrFail($id);
+        $room->members()->detach();
+        $room->delete();
         return response(
             "OK",
             200

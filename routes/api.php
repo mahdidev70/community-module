@@ -100,7 +100,7 @@ Route::middleware("auth:sanctum")->group(function () {
             Route::put('rooms/editor-data', [ChatRoomController::class, 'createUpdateChatRoomsPannel'])->can('community'); // Done
             Route::get('show/{id}', [ChatRoomController::class, 'getChatData'])->can('community'); // Done
             Route::post('update/{room}', [ChatRoomController::class, 'updateChat'])->can('community'); // Done
-            Route::delete('{slug}', [ChatRoomController::class, 'deleteRoom'])->can('community'); // Done
+            Route::delete('{id}', [ChatRoomController::class, 'deleteRoom'])->can('community'); // Done
 
             Route::post('generate/join-link/{room}', [JoinController::class, 'generateJoinLink'])->can('community'); // Done
             Route::get('join/list/common', [JoinController::class, 'commonData'])->can('community'); // Done
